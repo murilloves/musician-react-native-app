@@ -6,7 +6,7 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Frogão, Funfou?</Text>
+        <Text style={styles.welcome}>Meus Eventos</Text>
       </View>
     );
   }
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#4285F4',
+    backgroundColor: '#ffbb33',
   },
   welcome: {
     fontSize: 40,
