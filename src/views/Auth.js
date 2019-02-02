@@ -8,6 +8,9 @@ import {
     TouchableOpacity,
     Alert
 } from 'react-native'
+
+import axios from 'axios'
+import { server, showError } from '../commons/common'
 // import commonStyles from '../commonStyles'
 // import backGroundImage from '../../assets/imgs.login.jpg'
 
@@ -17,20 +20,58 @@ export default class Auth extends Component {
         name: '',
         email: '',
         password: '',
-        confirmPassword: '',
+        passwordConfirm: '',
     }
 
-    signinOrSignup = () => {
+    signinOrSignup = async () => {
         if (this.state.stageNew) {
-            Alert.alert('Sucesso!', 'Criar conta')
+            try {
+                await axios.post(`${server}/users/register`, {
+                    name: this.state.name,
+                    email: this.state.email,
+                    password: this.state.password,
+                    passwordConfirm: this.state.passwordConfirm
+                })
+
+                Alert.alert('Sucesso!', 'Usuário cadastrado.')
+                this.setState({ stageNew: false })
+            } catch (err) {
+                if (err.response.status === 400) {
+                    const jsonString = err.response.data
+                    Alert.alert('Dados inválidos.', JSON.stringify(jsonString).replace(/"/g, '').replace(/,/g, '\n\n').replace('{','').replace('}', '').replace(/:/g, ' : '))
+                } else {
+                    showError(JSON.stringify(err.response))
+                }
+            }
         } else {
-            Alert.alert('Sucesso!', 'Logar')
+            try {
+                const res = await axios.post(`${server}/users/login`, {
+                    email: this.state.email,
+                    password: this.state.password,
+                })
+
+                axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`
+
+                this.props.navigation.navigate('Home')
+            } catch (err) {
+                if (err.response.status === 400) {
+                    const jsonString = err.response.data
+                    Alert.alert('Dados inválidos.', JSON.stringify(jsonString).replace(/"/g, '').replace(/,/g, '\n\n').replace('{','').replace('}', '').replace(/:/g, ' : '))
+                } else {
+                    showError(JSON.stringify(err.response))
+                    // Alert.alert('Erro!', 'Usuário ou senha incorretos.')
+                }
+            }
         }
     }
 
     render() {
         return (
             <View style={styles.container}>
+                {/* <ImageBackground
+                    source={{uri: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png'}}
+                    style={styles.img}
+                /> */}
                 <Text style={styles.welcome}>
                     Museekr
                 </Text>
@@ -73,8 +114,8 @@ export default class Auth extends Component {
                             placeholder='Confirmação da senha'
                             placeholderTextColor='rgba(255,255,255,0.5)'
                             secureTextEntry
-                            value={this.state.confirmPassword}
-                            onChangeText={confirmPassword => this.setState({ confirmPassword })}
+                            value={this.state.passwordConfirm}
+                            onChangeText={passwordConfirm => this.setState({ passwordConfirm })}
                         />
                     }
                     <TouchableOpacity onPress={this.signinOrSignup} style={styles.button}>
@@ -146,5 +187,8 @@ const styles = StyleSheet.create({
     changeLoginSignin: {
         marginTop: 30,
         color: '#eee'
+    },
+    img: {
+        width: 100, height: 32
     }
 });
