@@ -50,15 +50,17 @@ export default class Auth extends Component {
                     password: this.state.password,
                 })
 
-                axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`
+                axios.defaults.headers.common['Authorization'] = `${res.data.token}`
 
-                this.props.navigation.navigate('Home')
+                // Alert.alert('Logado com sucesso', `Token: ${axios.defaults.headers.common['Authorization']}`)
+
+                this.props.navigation.navigate('HomePage')
             } catch (err) {
                 if (err.response.status === 400) {
                     const jsonString = err.response.data
                     Alert.alert('Dados inválidos.', JSON.stringify(jsonString).replace(/"/g, '').replace(/,/g, '\n\n').replace('{','').replace('}', '').replace(/:/g, ' : '))
                 } else {
-                    showError(JSON.stringify(err.response))
+                    showError(JSON.stringify(err.response.data.messages))
                     // Alert.alert('Erro!', 'Usuário ou senha incorretos.')
                 }
             }
