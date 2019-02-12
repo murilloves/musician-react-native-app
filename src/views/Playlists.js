@@ -29,7 +29,7 @@ export default class Playlists extends Component {
   render() {
     return (
       <View style={styles.container}>
-        {/* <HeaderComponent title='Minhas Playlists' /> */}
+        <HeaderComponent title='Minhas Playlists' />
         {
           this.state.playlists === null
           && <Text style={styles.welcome} onPress={this.loadPlaylists}>Carregando Playlists . . . </Text>
