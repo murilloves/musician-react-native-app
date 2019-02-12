@@ -54,7 +54,7 @@ export default class Auth extends Component {
 
                 // Alert.alert('Logado com sucesso', `Token: ${axios.defaults.headers.common['Authorization']}`)
 
-                this.props.navigation.navigate('HomePage')
+                this.props.navigation.navigate(pageToGoAfterLogin)
             } catch (err) {
                 if (err.response.status === 400) {
                     const jsonString = err.response.data
@@ -194,3 +194,5 @@ const styles = StyleSheet.create({
         width: 100, height: 32
     }
 });
+
+const pageToGoAfterLogin = 'Playlists'

@@ -1,12 +1,47 @@
-import React from 'react'
-import {} from 'react-native'
+import React, { Component } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
-export default class App extends React.Component {
+import HeaderComponent from '../components/Header'
+import axios from 'axios';
+import { server, showError } from '../commons/common';
+
+export default class Playlists extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      playlists: null
+    }
+  }
+
+  componentWillMount() {
+    this.loadPlaylists()
+  }
+
+  loadPlaylists = async () => {
+    try {
+      const res = await axios.get(`${server}/playlists/all`)
+      this.setState({ playlists: res.data })
+    } catch (err) {
+      showError(err)
+    }
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Minhas Playlists</Text>
+        {/* <HeaderComponent title='Minhas Playlists' /> */}
+        {
+          this.state.playlists === null
+          && <Text style={styles.welcome} onPress={this.loadPlaylists}>Carregando Playlists . . . </Text>
+        }
+        {
+          this.state.playlists && this.state.playlists.length >= 0
+          && (
+            this.state.playlists.map( (playlist) => (
+              <Text key={playlist._id} style={styles.welcome}>{playlist.playlistName}</Text>
+            ))
+          )
+        }
       </View>
     );
   }

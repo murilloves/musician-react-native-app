@@ -2,7 +2,7 @@ import React from 'react'
 import {} from 'react-native'
 import { StyleSheet, Text, View } from 'react-native'
 
-export default class App extends React.Component {
+export default class Gigs extends React.Component {
   render() {
     return (
       <View style={styles.container}>

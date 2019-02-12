@@ -2,7 +2,7 @@ import React from 'react'
 import {} from 'react-native'
 import { StyleSheet, Text, View } from 'react-native'
 
-export default class App extends React.Component {
+export default class HomePage extends React.Component {
   render() {
     return (
       <View style={styles.container}>
