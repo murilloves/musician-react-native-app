@@ -2,8 +2,9 @@ import { createSwitchNavigator } from 'react-navigation'
 
 import Auth from './views/Auth'
 import HomePage from './views/HomePage'
-import Playlists from './views/Playlists'
 import Gigs from './views/Gigs'
+import Playlists from './views/Playlists'
+import PlaylistInfo from './views/PlaylistInfo'
 
 const MainRoutes = {
     Auth: {
@@ -24,6 +25,11 @@ const MainRoutes = {
         name: 'Minhas Playlists',
         screen: Playlists,
         navigationOptions: { title: 'Minhas Playlists' }
+    },
+    PlaylistInfo: {
+        name: 'Playlist Info',
+        screen: PlaylistInfo,
+        navigationOptions: { title: 'Playlist Info' }
     },
 }
 

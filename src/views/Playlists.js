@@ -19,13 +19,19 @@ export default class Playlists extends Component {
   }
 
   loadPlaylists = async () => {
-    axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNTVjMzYxNjU2YWFjMzhmMDI3ZjlkNSIsIm5hbWUiOiJUZXN0ZSIsImF2YXRhciI6Ii8vd3d3LmdyYXZhdGFyLmNvbS9hdmF0YXIvNzUzYmI4YzFiMzY3MTkyOTkwNzgzOWI2YTE1MmJmMjE_cz0yMDAmcj1wZyZkPW1tIiwiaWF0IjoxNTUwMTc1Njg1LCJleHAiOjE1NTAxNzkyODV9.5P8Q3kJiURRyZu8BYL6suNQrHPd045Q-rKTU14A9wF8'
+    if (!axios.defaults.headers.common['Authorization']) {
+      axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNTVjMzYxNjU2YWFjMzhmMDI3ZjlkNSIsIm5hbWUiOiJUZXN0ZSIsImF2YXRhciI6Ii8vd3d3LmdyYXZhdGFyLmNvbS9hdmF0YXIvNzUzYmI4YzFiMzY3MTkyOTkwNzgzOWI2YTE1MmJmMjE_cz0yMDAmcj1wZyZkPW1tIiwiaWF0IjoxNTUwMTc1Njg1LCJleHAiOjE1NTAxNzkyODV9.5P8Q3kJiURRyZu8BYL6suNQrHPd045Q-rKTU14A9wF8'
+    }
     try {
       const res = await axios.get(`${server}/playlists/all`)
       this.setState({ playlists: res.data })
     } catch (err) {
       showError(err)
     }
+  }
+
+  enterPlaylist = (playlist) => {
+    this.props.navigation.navigate('PlaylistInfo')
   }
 
   render() {
@@ -43,7 +49,7 @@ export default class Playlists extends Component {
           (this.state.playlists && this.state.playlists.length >= 0) && (
             <View style={styles.playlistsContainer}>
               { this.state.playlists.map( (playlist) => (
-                <TouchableOpacity key={playlist._id} style={styles.playlistsCard}>
+                <TouchableOpacity key={playlist._id} style={styles.playlistsCard} onPress={this.enterPlaylist}>
                   <Text key={playlist._id} style={styles.playlistsText}>{playlist.playlistName}</Text>
                   <Ionicons
                     style={ styles.iconEdit }
