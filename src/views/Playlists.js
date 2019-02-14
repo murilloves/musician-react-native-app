@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Platform, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import Icon from 'react-native-vector-icons/Ionicons'
+import { Ionicons } from '@expo/vector-icons'
 
 import HeaderComponent from '../components/Header'
 import axios from 'axios';
@@ -19,7 +19,7 @@ export default class Playlists extends Component {
   }
 
   loadPlaylists = async () => {
-    axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNTVjMzYxNjU2YWFjMzhmMDI3ZjlkNSIsIm5hbWUiOiJUZXN0ZSIsImF2YXRhciI6Ii8vd3d3LmdyYXZhdGFyLmNvbS9hdmF0YXIvNzUzYmI4YzFiMzY3MTkyOTkwNzgzOWI2YTE1MmJmMjE_cz0yMDAmcj1wZyZkPW1tIiwiaWF0IjoxNTUwMDE4MDExLCJleHAiOjE1NTAwMjE2MTF9.Lz4UmFwYSVue1xrO6JxiFwPlgz3f5WzvyEfgZJ9XePk'
+    axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNTVjMzYxNjU2YWFjMzhmMDI3ZjlkNSIsIm5hbWUiOiJUZXN0ZSIsImF2YXRhciI6Ii8vd3d3LmdyYXZhdGFyLmNvbS9hdmF0YXIvNzUzYmI4YzFiMzY3MTkyOTkwNzgzOWI2YTE1MmJmMjE_cz0yMDAmcj1wZyZkPW1tIiwiaWF0IjoxNTUwMTc1Njg1LCJleHAiOjE1NTAxNzkyODV9.5P8Q3kJiURRyZu8BYL6suNQrHPd045Q-rKTU14A9wF8'
     try {
       const res = await axios.get(`${server}/playlists/all`)
       this.setState({ playlists: res.data })
@@ -45,7 +45,7 @@ export default class Playlists extends Component {
               { this.state.playlists.map( (playlist) => (
                 <TouchableOpacity key={playlist._id} style={styles.playlistsCard}>
                   <Text key={playlist._id} style={styles.playlistsText}>{playlist.playlistName}</Text>
-                  <Icon
+                  <Ionicons
                     style={ styles.iconEdit }
                     name={ Platform.OS === 'ios'? 'ios-create' : 'md-create' }
                   />
