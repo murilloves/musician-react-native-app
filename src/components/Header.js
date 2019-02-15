@@ -31,7 +31,9 @@ export default class HeaderComponent extends React.Component {
 }
 
 const primaryColor = '#444'
-const secondaryColor = '#fff'
+const secondaryColor = '#00C851'
+
+const androidNotchHeight = 24
 
 const styles = StyleSheet.create({
     container: {
@@ -39,7 +41,7 @@ const styles = StyleSheet.create({
         backgroundColor: secondaryColor,
         left: 0,
         right: 0,
-        top: 0
+        top: androidNotchHeight,
     },
     textHeader: {
         padding: 15,
