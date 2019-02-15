@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Platform, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { Platform, StyleSheet, Text, View, TouchableOpacity, AsyncStorage } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 
 import HeaderComponent from '../components/Header'
@@ -10,7 +10,8 @@ export default class Playlists extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      playlists: null
+      playlists: null,
+      selectedPlaylist: null
     }
   }
 
@@ -20,7 +21,7 @@ export default class Playlists extends Component {
 
   loadPlaylists = async () => {
     if (!axios.defaults.headers.common['Authorization']) {
-      axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNTVjMzYxNjU2YWFjMzhmMDI3ZjlkNSIsIm5hbWUiOiJUZXN0ZSIsImF2YXRhciI6Ii8vd3d3LmdyYXZhdGFyLmNvbS9hdmF0YXIvNzUzYmI4YzFiMzY3MTkyOTkwNzgzOWI2YTE1MmJmMjE_cz0yMDAmcj1wZyZkPW1tIiwiaWF0IjoxNTUwMTkzOTkwLCJleHAiOjE1NTAxOTc1OTB9.PzVtxzjfSF07THOPpdqmBL3Ldjy77h_qKLHyBudaDQ8'
+      axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNTVjMzYxNjU2YWFjMzhmMDI3ZjlkNSIsIm5hbWUiOiJUZXN0ZSIsImF2YXRhciI6Ii8vd3d3LmdyYXZhdGFyLmNvbS9hdmF0YXIvNzUzYmI4YzFiMzY3MTkyOTkwNzgzOWI2YTE1MmJmMjE_cz0yMDAmcj1wZyZkPW1tIiwiaWF0IjoxNTUwMTk3Njc1LCJleHAiOjE1NTAyMDEyNzV9.aJ5WqfyywCdnIcuxnTiuQqoxlZ-gDhWN--ZhRtGPMZ0'
     }
     try {
       const res = await axios.get(`${server}/playlists/all`)
@@ -30,8 +31,14 @@ export default class Playlists extends Component {
     }
   }
 
-  enterPlaylist = (playlist) => {
-    this.props.navigation.navigate('PlaylistInfo')
+  enterPlaylist = async (playlist) => {
+    try {
+      await AsyncStorage.setItem('selectedPlaylistName', playlist.playlistName)
+      await AsyncStorage.setItem('selectedPlaylistId', playlist._id)
+      this.props.navigation.navigate('PlaylistInfo')
+    } catch (err) {
+      // Error saving data
+    }
   }
 
   render() {
@@ -41,7 +48,7 @@ export default class Playlists extends Component {
         {
           (this.state.playlists === null) && (
             <View style={styles.container}>
-              <Text style={styles.placeholder} onPress={this.loadPlaylists}>Carregando . . . </Text>
+              <Text style={styles.placeholder}>Carregando . . . </Text>
             </View>
           )
         }
@@ -49,7 +56,7 @@ export default class Playlists extends Component {
           (this.state.playlists && this.state.playlists.length >= 0) && (
             <View style={styles.playlistsContainer}>
               { this.state.playlists.map( (playlist) => (
-                <TouchableOpacity key={playlist._id} style={styles.playlistsCard} onPress={this.enterPlaylist}>
+                <TouchableOpacity key={playlist._id} style={styles.playlistsCard} onPress={ this.enterPlaylist.bind(this,playlist) }>
                   <Text key={playlist._id} style={styles.playlistsText}>{playlist.playlistName}</Text>
                   <Ionicons
                     style={ styles.iconEdit }
