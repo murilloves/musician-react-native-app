@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Platform, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import Icon from 'react-native-vector-icons/Ionicons'
+import { Ionicons } from '@expo/vector-icons'
 
 import HeaderComponent from '../components/Header'
 import axios from 'axios';
@@ -19,13 +19,19 @@ export default class Playlists extends Component {
   }
 
   loadPlaylists = async () => {
-    axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNTVjMzYxNjU2YWFjMzhmMDI3ZjlkNSIsIm5hbWUiOiJUZXN0ZSIsImF2YXRhciI6Ii8vd3d3LmdyYXZhdGFyLmNvbS9hdmF0YXIvNzUzYmI4YzFiMzY3MTkyOTkwNzgzOWI2YTE1MmJmMjE_cz0yMDAmcj1wZyZkPW1tIiwiaWF0IjoxNTUwMDE4MDExLCJleHAiOjE1NTAwMjE2MTF9.Lz4UmFwYSVue1xrO6JxiFwPlgz3f5WzvyEfgZJ9XePk'
+    if (!axios.defaults.headers.common['Authorization']) {
+      axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNTVjMzYxNjU2YWFjMzhmMDI3ZjlkNSIsIm5hbWUiOiJUZXN0ZSIsImF2YXRhciI6Ii8vd3d3LmdyYXZhdGFyLmNvbS9hdmF0YXIvNzUzYmI4YzFiMzY3MTkyOTkwNzgzOWI2YTE1MmJmMjE_cz0yMDAmcj1wZyZkPW1tIiwiaWF0IjoxNTUwMTkzOTkwLCJleHAiOjE1NTAxOTc1OTB9.PzVtxzjfSF07THOPpdqmBL3Ldjy77h_qKLHyBudaDQ8'
+    }
     try {
       const res = await axios.get(`${server}/playlists/all`)
       this.setState({ playlists: res.data })
     } catch (err) {
       showError(err)
     }
+  }
+
+  enterPlaylist = (playlist) => {
+    this.props.navigation.navigate('PlaylistInfo')
   }
 
   render() {
@@ -43,9 +49,9 @@ export default class Playlists extends Component {
           (this.state.playlists && this.state.playlists.length >= 0) && (
             <View style={styles.playlistsContainer}>
               { this.state.playlists.map( (playlist) => (
-                <TouchableOpacity key={playlist._id} style={styles.playlistsCard}>
+                <TouchableOpacity key={playlist._id} style={styles.playlistsCard} onPress={this.enterPlaylist}>
                   <Text key={playlist._id} style={styles.playlistsText}>{playlist.playlistName}</Text>
-                  <Icon
+                  <Ionicons
                     style={ styles.iconEdit }
                     name={ Platform.OS === 'ios'? 'ios-create' : 'md-create' }
                   />
@@ -76,7 +82,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   playlistsContainer: {
-    marginTop: 60,
+    marginTop: 80,
   },
   playlistsCard: {
     flexDirection: 'row',

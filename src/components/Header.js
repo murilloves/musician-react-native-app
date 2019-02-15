@@ -1,6 +1,6 @@
 import React from 'react'
 import { Platform, StyleSheet, TouchableOpacity, Text, View } from 'react-native'
-import Icon from 'react-native-vector-icons/Ionicons'
+import { Ionicons } from '@expo/vector-icons'
 
 export default class HeaderComponent extends React.Component {
     constructor(props) {
@@ -12,14 +12,14 @@ export default class HeaderComponent extends React.Component {
             <View style={ styles.container }>
                 <View style={ styles.wrap }>
                     <TouchableOpacity>
-                        <Icon
+                        <Ionicons
                             style={ styles.iconHeader }
                             name={ Platform.OS === 'ios'? 'ios-menu' : 'md-menu' }
                         />
                     </TouchableOpacity>
                     <Text style={ styles.textHeader }>{ this.props.title }</Text>
                     <TouchableOpacity>
-                        <Icon
+                        <Ionicons
                             style={ styles.iconHeader }
                             name={ Platform.OS === 'ios'? 'ios-add' : 'md-add' }
                         />
@@ -31,7 +31,9 @@ export default class HeaderComponent extends React.Component {
 }
 
 const primaryColor = '#444'
-const secondaryColor = '#fff'
+const secondaryColor = '#00C851'
+
+const androidNotchHeight = 24
 
 const styles = StyleSheet.create({
     container: {
@@ -39,7 +41,7 @@ const styles = StyleSheet.create({
         backgroundColor: secondaryColor,
         left: 0,
         right: 0,
-        top: 0
+        top: androidNotchHeight,
     },
     textHeader: {
         padding: 15,
