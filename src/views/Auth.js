@@ -6,7 +6,8 @@ import {
     View,
     ImageBackground,
     TouchableOpacity,
-    Alert
+    Alert,
+    KeyboardAvoidingView
 } from 'react-native'
 
 import axios from 'axios'
@@ -69,7 +70,7 @@ export default class Auth extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <KeyboardAvoidingView behavior='padding' style={styles.container}>
                 {/* <ImageBackground
                     source={{uri: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png'}}
                     style={styles.img}
@@ -133,7 +134,7 @@ export default class Auth extends Component {
                         {this.state.stageNew ? 'Já possuo conta!' : 'Ainda não tenho conta'}
                     </Text>
                 </TouchableOpacity>
-            </View>
+            </KeyboardAvoidingView>
         )
     }
 }

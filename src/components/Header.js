@@ -19,10 +19,10 @@ export default class HeaderComponent extends React.Component {
                     </TouchableOpacity>
                     <Text style={ styles.textHeader }>{ this.props.title }</Text>
                     <TouchableOpacity>
-                        <Ionicons
+                        {/* <Ionicons
                             style={ styles.iconHeader }
                             name={ Platform.OS === 'ios'? 'ios-add' : 'md-add' }
-                        />
+                        /> */}
                     </TouchableOpacity>
                 </View>
             </View>
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         alignItems: 'flex-start',
         flexDirection:'row',
-        justifyContent: 'space-between'
+        justifyContent: 'flex-start'
     }
 })
 
