@@ -7,6 +7,7 @@ import {
   TextInput,
   View,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Platform,
   KeyboardAvoidingView,
   Alert,
@@ -52,13 +53,11 @@ export default class PlaylistInfo extends React.Component {
 
   getPlaylistSongs = async (playlistId) => {
     if (!axios.defaults.headers.common['Authorization']) {
-      axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNTVjMzYxNjU2YWFjMzhmMDI3ZjlkNSIsIm5hbWUiOiJUZXN0ZSIsImF2YXRhciI6Ii8vd3d3LmdyYXZhdGFyLmNvbS9hdmF0YXIvNzUzYmI4YzFiMzY3MTkyOTkwNzgzOWI2YTE1MmJmMjE_cz0yMDAmcj1wZyZkPW1tIiwiaWF0IjoxNTUwNjM4OTE4LCJleHAiOjE1NTA2NDI1MTh9.GmiRFRNCjVgAbasaTvxOBF_GqsO463Usm_qsDFOvDSs'
+      axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNTVjMzYxNjU2YWFjMzhmMDI3ZjlkNSIsIm5hbWUiOiJUZXN0ZSIsImF2YXRhciI6Ii8vd3d3LmdyYXZhdGFyLmNvbS9hdmF0YXIvNzUzYmI4YzFiMzY3MTkyOTkwNzgzOWI2YTE1MmJmMjE_cz0yMDAmcj1wZyZkPW1tIiwiaWF0IjoxNTUwNzExNzI3LCJleHAiOjE1NTA3MTUzMjd9.R916T7J0TA4xviI1alk8ZOYCLip6KEuAOdZYpGl-s6c'
     }
     try {
       const res = await axios.get(`${server}/playlists/${playlistId}`)
       this.setState({ ...this.state, songs: res.data.songs })
-
-      console.log(this.state)
     }
     catch (err) {
       // Show error msg
@@ -93,15 +92,6 @@ export default class PlaylistInfo extends React.Component {
       <View style={styles.wholeScreen}>
         <HeaderComponent title={this.state.playlistName} />
         <ScrollView style={styles.container}>
-          {
-            !this.state.isEditing &&
-              this.state.songs.map((song,index) => <SongDescription key={song._id} song={song} index={index}/>)
-          }
-          <View style={styles.alignRight}>
-            <TouchableOpacity style={styles.iconBtn} onPress={() => this.setState({ ...this.state, isEditing: !this.state.isEditing })}>
-              <Text style={styles.iconBig}>+</Text>
-            </TouchableOpacity>
-          </View>
           {
             this.state.isEditing &&
             (
@@ -138,32 +128,58 @@ export default class PlaylistInfo extends React.Component {
               </KeyboardAvoidingView>
             )
           }
+          {
+            !this.state.isEditing &&
+              this.state.songs.map((song,index) => <SongDescription key={song._id} song={song} index={index}/>)
+          }
+          <View style={styles.alignRight}>
+            <TouchableOpacity style={styles.iconBtn} onPress={() => this.setState({ ...this.state, isEditing: !this.state.isEditing })}>
+              <Text style={styles.iconBig}>+</Text>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       </View>
     );
   }
 }
 
-export const SongDescription = (props) => (
-  <View style={styles.playlistsCard}>
-    <View>
-      {
-        props.song.desc &&
-        <Text style={styles.smallText}>{1 + props.index} - {props.song.desc}</Text>
-      }
-      {
-        props.song.key &&
-        <Text style={styles.normalText}>({props.song.key}) {props.song.title}</Text>
-      }
-    </View>
-    <TouchableOpacity>
-      <Ionicons
-        style={ styles.icon }
-        name={ Platform.OS === 'ios'? 'ios-create' : 'md-create' }
-      />
-    </TouchableOpacity>
-  </View>
-)
+export class SongDescription extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      disabled: false
+    }
+  }
+
+  enableDisableCard = () => {
+    this.setState({ disabled: !this.state.disabled})
+  }
+
+  render() {
+    return (
+      <TouchableWithoutFeedback onPress={() => this.enableDisableCard()}>
+        <View style={this.state.disabled ? styles.disabledCard : styles.playlistsCard}>
+          <View>
+            {
+              this.props.song.desc &&
+              <Text style={styles.smallText}>{1 + this.props.index} - {this.props.song.desc}</Text>
+            }
+            {
+              <Text style={styles.normalText}>{this.props.song.key !== null ? `(${this.props.song.key}) ` : ''}{this.props.song.title}</Text>
+            }
+          </View>
+          <TouchableOpacity>
+            <Ionicons
+              style={ styles.icon }
+              name={ Platform.OS === 'ios'? 'ios-create' : 'md-create' }
+            />
+          </TouchableOpacity>
+        </View>
+      </TouchableWithoutFeedback>
+    )
+  }
+}
 
 const styles = StyleSheet.create({
   wholeScreen: {
@@ -196,6 +212,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     backgroundColor: '#eee',
+    marginTop: 1,
+    padding: 20
+  },
+  disabledCard: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#888',
     marginTop: 1,
     padding: 20
   },

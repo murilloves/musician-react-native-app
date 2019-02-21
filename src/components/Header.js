@@ -31,7 +31,7 @@ export default class HeaderComponent extends React.Component {
 }
 
 const primaryColor = '#444'
-const secondaryColor = '#00C851'
+const secondaryColor = '#ddd'
 
 const androidNotchHeight = 24
 
