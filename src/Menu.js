@@ -37,24 +37,3 @@ const MainNavigator = createSwitchNavigator(MainRoutes, {
     initialRouteName: 'Auth'
 })
 export default MainNavigator
-
-// export default createDrawerNavigator({
-//     Auth: {
-//         screen: () => <Auth/>,
-//         navigationOptions: { title: 'Autenticação' }
-//     },
-//     HomePage: {
-//         screen: () => <HomePage/>,
-//         navigationOptions: { title: 'Página Inicial' }
-//     },
-//     Gigs: {
-//         screen: () => <Gigs/>,
-//         navigationOptions: { title: 'Meus Eventos' }
-//     },
-//     Playlists: {
-//         screen: () => <Playlists/>,
-//         navigationOptions: { title: 'Minhas Playlists' }
-//     },
-// }, { drawerWidth: 300 })
-
-

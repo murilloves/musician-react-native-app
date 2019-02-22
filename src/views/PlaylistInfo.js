@@ -13,7 +13,7 @@ import {
   Alert,
   ScrollView
 } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
+// import { Ionicons } from '@expo/vector-icons'
 
 import axios from 'axios'
 import { server, showError } from '../commons/common'
@@ -53,7 +53,7 @@ export default class PlaylistInfo extends React.Component {
 
   getPlaylistSongs = async (playlistId) => {
     if (!axios.defaults.headers.common['Authorization']) {
-      axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNTVjMzYxNjU2YWFjMzhmMDI3ZjlkNSIsIm5hbWUiOiJUZXN0ZSIsImF2YXRhciI6Ii8vd3d3LmdyYXZhdGFyLmNvbS9hdmF0YXIvNzUzYmI4YzFiMzY3MTkyOTkwNzgzOWI2YTE1MmJmMjE_cz0yMDAmcj1wZyZkPW1tIiwiaWF0IjoxNTUwNzExNzI3LCJleHAiOjE1NTA3MTUzMjd9.R916T7J0TA4xviI1alk8ZOYCLip6KEuAOdZYpGl-s6c'
+      axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNTVjMzYxNjU2YWFjMzhmMDI3ZjlkNSIsIm5hbWUiOiJUZXN0ZSIsImF2YXRhciI6Ii8vd3d3LmdyYXZhdGFyLmNvbS9hdmF0YXIvNzUzYmI4YzFiMzY3MTkyOTkwNzgzOWI2YTE1MmJmMjE_cz0yMDAmcj1wZyZkPW1tIiwiaWF0IjoxNTUwNzIwMDMzLCJleHAiOjE1NTA3MjM2MzN9.9V9UawEqHel9Dodji_InRXSw3y4OzrSAadXKVOPD2Rs'
     }
     try {
       const res = await axios.get(`${server}/playlists/${playlistId}`)
@@ -132,11 +132,14 @@ export default class PlaylistInfo extends React.Component {
             !this.state.isEditing &&
               this.state.songs.map((song,index) => <SongDescription key={song._id} song={song} index={index}/>)
           }
-          <View style={styles.alignRight}>
-            <TouchableOpacity style={styles.iconBtn} onPress={() => this.setState({ ...this.state, isEditing: !this.state.isEditing })}>
-              <Text style={styles.iconBig}>+</Text>
-            </TouchableOpacity>
-          </View>
+          {
+            !this.state.isEditing &&
+            <View style={styles.alignRight}>
+              <TouchableOpacity style={styles.iconBtn} onPress={() => this.setState({ ...this.state, isEditing: !this.state.isEditing })}>
+                <Text style={styles.iconBig}>+</Text>
+              </TouchableOpacity>
+            </View>
+          }
         </ScrollView>
       </View>
     );
@@ -170,10 +173,10 @@ export class SongDescription extends React.Component {
             }
           </View>
           <TouchableOpacity>
-            <Ionicons
+            {/* <Ionicons
               style={ styles.icon }
               name={ Platform.OS === 'ios'? 'ios-create' : 'md-create' }
-            />
+            /> */}
           </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
@@ -187,6 +190,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1C2331'
   },
   inputContainer: {
+    marginTop: 40,
     flex: 1,
     alignItems: 'center',
   },

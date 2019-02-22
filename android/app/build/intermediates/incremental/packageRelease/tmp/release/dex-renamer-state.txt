@@ -1,0 +1,4 @@
+#Thu Feb 21 00:56:26 BRT 2019
+base.0=C\:\\Users\\Murillo\\Documents\\Github\\native-react-app\\nativeApp\\android\\app\\build\\intermediates\\transforms\\dexMerger\\release\\0
+path.0=classes.dex
+renamed.0=classes.dex
