@@ -13,7 +13,7 @@ import {
   Alert,
   ScrollView
 } from 'react-native'
-// import { Ionicons } from '@expo/vector-icons'
+import { Ionicons } from '@expo/vector-icons'
 
 import axios from 'axios'
 import { server, showError } from '../commons/common'
@@ -90,7 +90,7 @@ export default class PlaylistInfo extends React.Component {
   render() {
     return (
       <View style={styles.wholeScreen}>
-        <HeaderComponent title={this.state.playlistName} />
+        <HeaderComponent title={this.state.playlistName} navigation={this.props.navigation} navTo={'Playlists'}/>
         <ScrollView style={styles.container}>
           {
             this.state.isEditing &&
@@ -160,6 +160,7 @@ export class SongDescription extends React.Component {
   }
 
   render() {
+    const editCard
     return (
       <TouchableWithoutFeedback onPress={() => this.enableDisableCard()}>
         <View style={this.state.disabled ? styles.disabledCard : styles.playlistsCard}>
@@ -172,11 +173,11 @@ export class SongDescription extends React.Component {
               <Text style={styles.normalText}>{this.props.song.key !== null ? `(${this.props.song.key}) ` : ''}{this.props.song.title}</Text>
             }
           </View>
-          <TouchableOpacity>
-            {/* <Ionicons
-              style={ styles.icon }
+          <TouchableOpacity style={styles.iconBtn} onPress={() => {this.setState({ ...this.state, isEditing: !this.state.isEditing }); console.log(this.props)}}>
+            <Ionicons
+              style={ styles.iconBig }
               name={ Platform.OS === 'ios'? 'ios-create' : 'md-create' }
-            /> */}
+            />
           </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
@@ -220,11 +221,13 @@ const styles = StyleSheet.create({
     color: '#444',
     fontSize: 15
   },
-  icon: {
-    justifyContent: 'center',
+  iconBtn: {
     alignItems: 'center',
-    color: '#444',
-    fontSize: 20
+    justifyContent: 'center',
+    backgroundColor: '#f5f5f5',
+    borderRadius: 50,
+    width: 50,
+    height: 50
   },
   alignRight: {
     alignItems: 'flex-end',

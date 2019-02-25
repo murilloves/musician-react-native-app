@@ -62,7 +62,7 @@ export default class Playlists extends Component {
       this.loadPlaylists()
       this.setState({ ...this.state, isEditing: !this.state.isEditing })
     } catch (err) {
-      // Show error msg
+      showError(JSON.stringify(err.response.data))
     }
   }
 
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     width: 300,
-    backgroundColor: 'rgba(0,0,0,0.1)',
+    backgroundColor: 'rgba(0,0,0,0.05)',
     marginBottom: 10,
     color: '#333',
     paddingHorizontal: 15
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 50,
     flexGrow: 1,
-    backgroundColor: '#00C851',
+    backgroundColor: '#33b5e5',
     marginLeft: 5
   },
   btnRow: {

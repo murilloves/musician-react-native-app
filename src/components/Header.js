@@ -8,16 +8,19 @@ export default class HeaderComponent extends React.Component {
     }
 
     render () {
+        const navigate = this.props.navigation ? this.props.navigation.navigate : null;
+        const navTo = this.props.navTo ? this.props.navTo : 'HomePage';
         return (
             <View style={ styles.container }>
                 <View style={ styles.wrap }>
-                    <TouchableOpacity>
-                        <Ionicons
-                            name={ Platform.OS === 'ios'? 'ios-menu' : 'md-menu' }
-                            size={20}
-                            color={'#555'}
-                        />
-                    </TouchableOpacity>
+                    {navigate &&
+                        <TouchableOpacity onPress={ () => navigate(navTo) }>
+                            <Ionicons
+                                style={ styles.iconHeader }
+                                name={ Platform.OS === 'ios'? 'ios-arrow-round-back' : 'md-arrow-round-back' }
+                            />
+                        </TouchableOpacity>
+                    }
                     <Text style={ styles.textHeader }>{ this.props.title }</Text>
                     <TouchableOpacity>
                         {/* <Ionicons
