@@ -1,6 +1,6 @@
 import React from 'react'
 import { Platform, StyleSheet, TouchableOpacity, Text, View } from 'react-native'
-// import { Icon } from 'react-native-vector-icons/Ionicons'
+import { Ionicons } from '@expo/vector-icons'
 
 export default class HeaderComponent extends React.Component {
     constructor(props) {
@@ -12,10 +12,11 @@ export default class HeaderComponent extends React.Component {
             <View style={ styles.container }>
                 <View style={ styles.wrap }>
                     <TouchableOpacity>
-                        {/* <Icon
-                            style={ styles.iconHeader }
+                        <Ionicons
                             name={ Platform.OS === 'ios'? 'ios-menu' : 'md-menu' }
-                        /> */}
+                            size={20}
+                            color={'#555'}
+                        />
                     </TouchableOpacity>
                     <Text style={ styles.textHeader }>{ this.props.title }</Text>
                     <TouchableOpacity>

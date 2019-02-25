@@ -1,5 +1,15 @@
 import React, { Component } from 'react'
-import { Platform, StyleSheet, Text, View, TouchableOpacity, AsyncStorage } from 'react-native'
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  AsyncStorage,
+  ScrollView,
+  KeyboardAvoidingView,
+  TextInput
+} from 'react-native'
 // import { Ionicons } from '@expo/vector-icons'
 
 import HeaderComponent from '../components/Header'
@@ -10,7 +20,9 @@ export default class Playlists extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      isEditing: false,
       playlists: null,
+      newPlaylistName: null,
       selectedPlaylist: null
     }
   }
@@ -41,25 +53,74 @@ export default class Playlists extends Component {
     }
   }
 
+  createNewPlaylist = async () => {
+    try {
+      await axios.post(`${server}/playlists`, {
+        playlistName: this.state.newPlaylistName
+      })
+
+      this.loadPlaylists()
+      this.setState({ ...this.state, isEditing: !this.state.isEditing })
+    } catch (err) {
+      // Show error msg
+    }
+  }
+
   render() {
     return (
       <View style={styles.wholeScreen}>
         <HeaderComponent title='Minhas Playlists' />
-        {
-          (this.state.playlists && this.state.playlists.length >= 0) && (
-            <View style={styles.playlistsContainer}>
-              { this.state.playlists.map( (playlist) => (
-                <TouchableOpacity key={playlist._id} style={styles.playlistsCard} onPress={ this.enterPlaylist.bind(this,playlist) }>
-                  <Text key={playlist._id} style={styles.playlistsText}>{playlist.playlistName}</Text>
-                  {/* <Ionicons
-                    style={ styles.iconEdit }
-                    name={ Platform.OS === 'ios'? 'ios-create' : 'md-create' }
-                  /> */}
+        <ScrollView style={styles.scrollView}>
+          {
+            this.state.isEditing &&
+            (
+              <KeyboardAvoidingView behavior='padding' style={styles.inputContainer}>
+                <TextInput
+                  style={styles.input}
+                  placeholder='Nome da playlist'
+                  placeholderTextColor='rgba(0,0,0,0.5)'
+                  value={this.state.newPlaylistName}
+                  onChangeText={title => this.setState({ ...this.state, newPlaylistName: title })}
+                />
+                <View style={styles.btnRow}>
+                  <TouchableOpacity style={styles.cancelButton} onPress={() => this.setState({ ...this.state, isEditing: !this.state.isEditing })}>
+                    <Text>Cancelar</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={this.createNewPlaylist} style={styles.addButton}>
+                    <Text>Adicionar</Text>
+                  </TouchableOpacity>
+                </View>
+              </KeyboardAvoidingView>
+            )
+          }
+          {
+            !this.state.isEditing && (this.state.playlists && this.state.playlists.length >= 0) && (
+              <View style={styles.playlistsContainer}>
+                {
+                  this.state.playlists.map( (playlist) => (
+                    <TouchableOpacity key={playlist._id} style={styles.playlistsCard} onPress={ this.enterPlaylist.bind(this,playlist) }>
+                      <Text key={playlist._id} style={styles.playlistsText}>{playlist.playlistName}</Text>
+                      {/* <Ionicons
+                        style={ styles.iconEdit }
+                        name={ Platform.OS === 'ios'? 'ios-create' : 'md-create' }
+                      /> */}
+                    </TouchableOpacity>
+                  ))
+                }
+              </View>
+            )
+          }
+          <View>
+            {
+              !this.state.isEditing &&
+              <View style={styles.alignRight}>
+                <TouchableOpacity style={styles.iconBtn} onPress={() => this.setState({ ...this.state, isEditing: !this.state.isEditing })}>
+                  <Text style={styles.iconBig}>+</Text>
                 </TouchableOpacity>
-              ))}
-            </View>
-          )
-        }
+              </View>
+            }
+          </View>
+        </ScrollView>
       </View>
     );
   }
@@ -74,6 +135,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#00C851',
+  },
+  scrollView: {
+    flex: 1,
   },
   placeholder: {
     fontSize: 40,
@@ -97,5 +161,65 @@ const styles = StyleSheet.create({
   },
   iconEdit: {
     fontSize: 25
-  }
+  },
+  alignRight: {
+    alignItems: 'flex-end',
+    padding: 20
+  },
+  iconBig: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#444',
+    fontSize: 30
+  },
+  iconBtn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#f5f5f5',
+    borderRadius: 50,
+    width: 50,
+    height: 50
+  },
+  iconBtn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#f5f5f5',
+    borderRadius: 50,
+    width: 50,
+    height: 50
+  },
+  inputContainer: {
+    marginTop: 120,
+    flex: 1,
+    alignItems: 'center',
+  },
+  input: {
+    height: 40,
+    width: 300,
+    backgroundColor: 'rgba(0,0,0,0.1)',
+    marginBottom: 10,
+    color: '#333',
+    paddingHorizontal: 15
+  },
+  cancelButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 50,
+    flexGrow: 1,
+    backgroundColor: '#eee',
+    marginRight: 5
+  },
+  addButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 50,
+    flexGrow: 1,
+    backgroundColor: '#00C851',
+    marginLeft: 5
+  },
+  btnRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: 300,
+  },
 });

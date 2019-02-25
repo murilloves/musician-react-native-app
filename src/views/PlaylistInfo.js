@@ -189,15 +189,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#1C2331'
   },
-  inputContainer: {
-    marginTop: 40,
-    flex: 1,
-    alignItems: 'center',
-  },
-  alignRight: {
-    alignItems: 'flex-end',
-    padding: 20
-  },
   container: {
     marginTop: 80,
     flex: 1,
@@ -206,11 +197,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     margin: 10,
     color: 'white',
-  },
-  btnRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 300,
   },
   playlistsCard: {
     flexDirection: 'row',
@@ -240,6 +226,10 @@ const styles = StyleSheet.create({
     color: '#444',
     fontSize: 20
   },
+  alignRight: {
+    alignItems: 'flex-end',
+    padding: 20
+  },
   iconBig: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -253,6 +243,16 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     width: 50,
     height: 50
+  },
+  inputContainer: {
+    marginTop: 40,
+    flex: 1,
+    alignItems: 'center',
+  },
+  btnRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: 300,
   },
   input: {
     height: 40,
