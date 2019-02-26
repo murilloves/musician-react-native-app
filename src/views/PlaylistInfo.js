@@ -84,7 +84,6 @@ export default class PlaylistInfo extends React.Component {
           showError(JSON.stringify(err.response))
       }
     }
-
   }
 
   render() {
@@ -151,7 +150,10 @@ export class SongDescription extends React.Component {
     super(props)
 
     this.state = {
-      disabled: false
+      isEditing: false,
+      editTitle: this.props.song.title,
+      editKey: this.props.song.key,
+      editDesc: this.props.song.desc,
     }
   }
 
@@ -160,25 +162,63 @@ export class SongDescription extends React.Component {
   }
 
   render() {
-    const editCard
     return (
       <TouchableWithoutFeedback onPress={() => this.enableDisableCard()}>
-        <View style={this.state.disabled ? styles.disabledCard : styles.playlistsCard}>
-          <View>
-            {
-              this.props.song.desc &&
-              <Text style={styles.smallText}>{1 + this.props.index} - {this.props.song.desc}</Text>
-            }
-            {
-              <Text style={styles.normalText}>{this.props.song.key !== null ? `(${this.props.song.key}) ` : ''}{this.props.song.title}</Text>
-            }
-          </View>
-          <TouchableOpacity style={styles.iconBtn} onPress={() => {this.setState({ ...this.state, isEditing: !this.state.isEditing }); console.log(this.props)}}>
-            <Ionicons
-              style={ styles.iconBig }
-              name={ Platform.OS === 'ios'? 'ios-create' : 'md-create' }
-            />
-          </TouchableOpacity>
+        <View>
+          {
+            this.state.isEditing &&
+            <KeyboardAvoidingView behavior='padding' style={styles.inputContainerEdit}>
+              <TextInput
+                style={styles.input}
+                placeholder='Nome da música'
+                placeholderTextColor='rgba(255,255,255,0.5)'
+                value={this.state.editTitle}
+                onChangeText={title => this.setState({ ...this.state, editTitle: title })}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder='Tonalidade'
+                placeholderTextColor='rgba(255,255,255,0.5)'
+                value={this.state.editKey}
+                onChangeText={key => this.setState({ ...this.state, editKey: key })}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder='Descrição'
+                placeholderTextColor='rgba(255,255,255,0.5)'
+                value={this.state.editDesc}
+                onChangeText={desc => this.setState({ ...this.state, editDesc: desc })}
+              />
+              <View style={styles.btnRow}>
+                <TouchableOpacity style={styles.cancelButton} onPress={() => this.setState({ ...this.state, isEditing: !this.state.isEditing })}>
+                  <Text>Cancelar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={this.addSongToPlaylist} style={styles.modifyButton}>
+                  <Text>Alterar</Text>
+                </TouchableOpacity>
+              </View>
+            </KeyboardAvoidingView>
+          }
+          {
+            !this.state.isEditing &&
+            <View style={this.state.disabled ? styles.disabledCard : styles.playlistsCard}>
+              <View>
+                {
+                  this.props.song.desc &&
+                  <Text style={styles.smallText}>{1 + this.props.index} - {this.props.song.desc}</Text>
+                }
+                {
+                  <Text style={styles.normalText}>{this.props.song.key !== null ? `(${this.props.song.key}) ` : ''}{this.props.song.title}</Text>
+                }
+              </View>
+              <TouchableOpacity style={styles.iconBtn} onPress={() => {this.setState({ ...this.state, isEditing: !this.state.isEditing }); console.log(this.props)}}>
+                <Ionicons
+                  style={ styles.iconBig }
+                  name={ Platform.OS === 'ios'? 'ios-create' : 'md-create' }
+                  />
+              </TouchableOpacity>
+            </View>
+          }
         </View>
       </TouchableWithoutFeedback>
     )
@@ -209,7 +249,7 @@ const styles = StyleSheet.create({
   disabledCard: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#888',
+    backgroundColor: '#aaa',
     marginTop: 1,
     padding: 20
   },
@@ -252,10 +292,17 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
+  inputContainerEdit: {
+    paddingTop: 40,
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: '#555'
+  },
   btnRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: 300,
+    paddingBottom: 40
   },
   input: {
     height: 40,
@@ -279,6 +326,14 @@ const styles = StyleSheet.create({
     height: 50,
     flexGrow: 1,
     backgroundColor: '#00C851',
+    marginLeft: 5
+  },
+  modifyButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 50,
+    flexGrow: 1,
+    backgroundColor: '#08c',
     marginLeft: 5
   },
 });
