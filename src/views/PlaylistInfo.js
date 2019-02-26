@@ -129,7 +129,7 @@ export default class PlaylistInfo extends React.Component {
           }
           {
             !this.state.isEditing &&
-              this.state.songs.map((song,index) => <SongDescription key={song._id} song={song} index={index}/>)
+              this.state.songs.map((song,index) => <SongDescription key={song._id} song={song} index={index} playlistId={this.state.playlistId}/>)
           }
           {
             !this.state.isEditing &&
@@ -153,12 +153,39 @@ export class SongDescription extends React.Component {
       isEditing: false,
       editTitle: this.props.song.title,
       editKey: this.props.song.key,
+      editAuthor: this.props.song.author,
       editDesc: this.props.song.desc,
+      songId: this.props.song._id,
+      playlistId: this.props.playlistId
     }
   }
 
   enableDisableCard = () => {
     this.setState({ disabled: !this.state.disabled})
+  }
+
+  updateSongInPlaylist = async () => {
+    try {
+      await axios.post(`${server}/playlists/${this.state.playlistId}/addSong`, {
+        _id: this.state.songId,
+        title: this.state.editTitle,
+        desc: this.state.editDesc,
+        author: this.state.editAuthor,
+        key: this.state.editKey,
+      })
+
+      Alert.alert('Sucesso!', 'Música alterada.')
+      this.setState({ ...this.state, isEditing: !this.state.isEditing })
+    } catch (err) {
+      console.log(err)
+      if (err.response.status === 400) {
+        const jsonString = err.response.data
+        Alert.alert('Dados inválidos.', JSON.stringify(jsonString).replace(/"/g, '').replace(/,/g, '\n\n').replace('{','').replace('}', '').replace(/:/g, ' : '))
+      } else {
+          showError(JSON.stringify(err.response))
+      }
+      this.setState({ ...this.state, isEditing: !this.state.isEditing })
+    }
   }
 
   render() {
@@ -193,7 +220,7 @@ export class SongDescription extends React.Component {
                 <TouchableOpacity style={styles.cancelButton} onPress={() => this.setState({ ...this.state, isEditing: !this.state.isEditing })}>
                   <Text>Cancelar</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={this.addSongToPlaylist} style={styles.modifyButton}>
+                <TouchableOpacity onPress={this.updateSongInPlaylist} style={styles.modifyButton}>
                   <Text>Alterar</Text>
                 </TouchableOpacity>
               </View>
@@ -204,16 +231,16 @@ export class SongDescription extends React.Component {
             <View style={this.state.disabled ? styles.disabledCard : styles.playlistsCard}>
               <View>
                 {
-                  this.props.song.desc &&
-                  <Text style={styles.smallText}>{1 + this.props.index} - {this.props.song.desc}</Text>
+                  this.state.editDesc &&
+                  <Text style={styles.smallText}>{1 + this.props.index} - {this.state.editDesc}</Text>
                 }
                 {
-                  <Text style={styles.normalText}>{this.props.song.key !== null ? `(${this.props.song.key}) ` : ''}{this.props.song.title}</Text>
+                  <Text style={styles.normalText}>{this.state.editKey !== null ? `(${this.state.editKey}) ` : ''}{this.state.editTitle}</Text>
                 }
               </View>
-              <TouchableOpacity style={styles.iconBtn} onPress={() => {this.setState({ ...this.state, isEditing: !this.state.isEditing }); console.log(this.props)}}>
+              <TouchableOpacity style={styles.iconBtn} onPress={() => this.setState({ ...this.state, isEditing: !this.state.isEditing })}>
                 <Ionicons
-                  style={ styles.iconBig }
+                  style={ styles.iconMid }
                   name={ Platform.OS === 'ios'? 'ios-create' : 'md-create' }
                   />
               </TouchableOpacity>
@@ -278,6 +305,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     color: '#444',
     fontSize: 30
+  },
+  iconMid: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#555',
+    fontSize: 25
   },
   iconBtn: {
     alignItems: 'center',
