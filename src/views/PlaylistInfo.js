@@ -53,14 +53,14 @@ export default class PlaylistInfo extends React.Component {
 
   getPlaylistSongs = async (playlistId) => {
     if (!axios.defaults.headers.common['Authorization']) {
-      axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNTVjMzYxNjU2YWFjMzhmMDI3ZjlkNSIsIm5hbWUiOiJUZXN0ZSIsImF2YXRhciI6Ii8vd3d3LmdyYXZhdGFyLmNvbS9hdmF0YXIvNzUzYmI4YzFiMzY3MTkyOTkwNzgzOWI2YTE1MmJmMjE_cz0yMDAmcj1wZyZkPW1tIiwiaWF0IjoxNTUwNzIwMDMzLCJleHAiOjE1NTA3MjM2MzN9.9V9UawEqHel9Dodji_InRXSw3y4OzrSAadXKVOPD2Rs'
+      axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNTVjMzYxNjU2YWFjMzhmMDI3ZjlkNSIsIm5hbWUiOiJUZXN0ZSIsImF2YXRhciI6Ii8vd3d3LmdyYXZhdGFyLmNvbS9hdmF0YXIvNzUzYmI4YzFiMzY3MTkyOTkwNzgzOWI2YTE1MmJmMjE_cz0yMDAmcj1wZyZkPW1tIiwiaWF0IjoxNTUxNDA3NzE5LCJleHAiOjE1NTE0MTEzMTl9._66UwvYQWnI5Y56jzI0H3TkM_ShAHmvDCIXvVZDuoZE'
     }
     try {
       const res = await axios.get(`${server}/playlists/${playlistId}`)
       this.setState({ ...this.state, songs: res.data.songs })
     }
     catch (err) {
-      // Show error msg
+      showError(err)
     }
   }
 
@@ -151,6 +151,7 @@ export class SongDescription extends React.Component {
 
     this.state = {
       isEditing: false,
+      wasDeleted: false,
       editTitle: this.props.song.title,
       editKey: this.props.song.key,
       editAuthor: this.props.song.author,
@@ -188,65 +189,97 @@ export class SongDescription extends React.Component {
     }
   }
 
+  dialogDeleteSong = () => {
+    Alert.alert(
+      'Delete song',
+      'Do you really want to delete?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'Delete', onPress: () => this.deleteSongFromPlaylist()},
+      ],
+      {cancelable: false},
+    );
+  }
+
+  deleteSongFromPlaylist = async () => {
+    await axios.post(`${server}/playlists/${this.state.playlistId}/removeSong`, {
+      _id: this.state.songId
+    })
+
+    this.setState({ ...this.state, wasDeleted: true })
+    Alert.alert('Sucesso', 'Música deletada')
+  }
+
   render() {
     return (
+      !this.state.wasDeleted &&
       <TouchableWithoutFeedback onPress={() => this.enableDisableCard()}>
-        <View>
-          {
-            this.state.isEditing &&
-            <KeyboardAvoidingView behavior='padding' style={styles.inputContainerEdit}>
-              <TextInput
-                style={styles.input}
-                placeholder='Nome da música'
-                placeholderTextColor='rgba(255,255,255,0.5)'
-                value={this.state.editTitle}
-                onChangeText={title => this.setState({ ...this.state, editTitle: title })}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder='Tonalidade'
-                placeholderTextColor='rgba(255,255,255,0.5)'
-                value={this.state.editKey}
-                onChangeText={key => this.setState({ ...this.state, editKey: key })}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder='Descrição'
-                placeholderTextColor='rgba(255,255,255,0.5)'
-                value={this.state.editDesc}
-                onChangeText={desc => this.setState({ ...this.state, editDesc: desc })}
-              />
-              <View style={styles.btnRow}>
-                <TouchableOpacity style={styles.cancelButton} onPress={() => this.setState({ ...this.state, isEditing: !this.state.isEditing })}>
-                  <Text>Cancelar</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={this.updateSongInPlaylist} style={styles.modifyButton}>
-                  <Text>Alterar</Text>
+          <View>
+            {
+              <View style={this.state.disabled ? styles.disabledCard : styles.playlistsCard}>
+                <View style={styles.size80}>
+                  {
+                    this.state.editDesc &&
+                    <Text style={styles.smallText}>{1 + this.props.index} - {this.state.editDesc}</Text>
+                  }
+                  {
+                    <Text style={styles.normalText}>{this.state.editKey !== null ? `(${this.state.editKey}) ` : ''}{this.state.editTitle}</Text>
+                  }
+                </View>
+                <TouchableOpacity style={styles.iconBtn} onPress={() => this.setState({ ...this.state, isEditing: !this.state.isEditing })}>
+                  <Ionicons
+                    style={ styles.iconMid }
+                    name={ Platform.OS === 'ios'? 'ios-create' : 'md-create' }
+                    />
                 </TouchableOpacity>
               </View>
-            </KeyboardAvoidingView>
-          }
-          {
-            !this.state.isEditing &&
-            <View style={this.state.disabled ? styles.disabledCard : styles.playlistsCard}>
-              <View>
-                {
-                  this.state.editDesc &&
-                  <Text style={styles.smallText}>{1 + this.props.index} - {this.state.editDesc}</Text>
-                }
-                {
-                  <Text style={styles.normalText}>{this.state.editKey !== null ? `(${this.state.editKey}) ` : ''}{this.state.editTitle}</Text>
-                }
-              </View>
-              <TouchableOpacity style={styles.iconBtn} onPress={() => this.setState({ ...this.state, isEditing: !this.state.isEditing })}>
-                <Ionicons
-                  style={ styles.iconMid }
-                  name={ Platform.OS === 'ios'? 'ios-create' : 'md-create' }
-                  />
-              </TouchableOpacity>
-            </View>
-          }
-        </View>
+            }
+            {
+              this.state.isEditing &&
+              <KeyboardAvoidingView behavior='padding' style={styles.inputContainerEdit}>
+                <TouchableOpacity style={styles.alignLeft} onPress={this.dialogDeleteSong}>
+                  <Ionicons
+                    style={[ styles.iconMid, {color: 'red'}]}
+                    name={ Platform.OS === 'ios'? 'ios-trash' : 'md-trash' }
+                    />
+                </TouchableOpacity>
+                <TextInput
+                  style={styles.input}
+                  placeholder='Nome da música'
+                  placeholderTextColor='rgba(255,255,255,0.5)'
+                  value={this.state.editTitle}
+                  onChangeText={title => this.setState({ ...this.state, editTitle: title })}
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder='Tonalidade'
+                  placeholderTextColor='rgba(255,255,255,0.5)'
+                  value={this.state.editKey}
+                  onChangeText={key => this.setState({ ...this.state, editKey: key })}
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder='Descrição'
+                  placeholderTextColor='rgba(255,255,255,0.5)'
+                  value={this.state.editDesc}
+                  onChangeText={desc => this.setState({ ...this.state, editDesc: desc })}
+                />
+                <View style={styles.btnRow}>
+                  <TouchableOpacity style={styles.cancelButton} onPress={() => this.setState({ ...this.state, isEditing: !this.state.isEditing })}>
+                    <Text>Cancelar</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={this.updateSongInPlaylist} style={styles.modifyButton}>
+                    <Text>Alterar</Text>
+                  </TouchableOpacity>
+                </View>
+              </KeyboardAvoidingView>
+            }
+          </View>
       </TouchableWithoutFeedback>
     )
   }
@@ -258,13 +291,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#1C2331'
   },
   container: {
-    marginTop: 80,
+    marginTop: 85,
     flex: 1,
-  },
-  welcome: {
-    fontSize: 20,
-    margin: 10,
-    color: 'white',
   },
   playlistsCard: {
     flexDirection: 'row',
@@ -298,6 +326,11 @@ const styles = StyleSheet.create({
   },
   alignRight: {
     alignItems: 'flex-end',
+    width: '100%',
+    padding: 20
+  },
+  alignLeft: {
+    alignItems: 'flex-start',
     padding: 20
   },
   iconBig: {
@@ -312,21 +345,13 @@ const styles = StyleSheet.create({
     color: '#555',
     fontSize: 25
   },
-  iconBtn: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f5f5f5',
-    borderRadius: 50,
-    width: 50,
-    height: 50
-  },
   inputContainer: {
     marginTop: 40,
     flex: 1,
     alignItems: 'center',
   },
   inputContainerEdit: {
-    paddingTop: 40,
+    paddingTop: 10,
     flex: 1,
     alignItems: 'center',
     backgroundColor: '#555'
@@ -369,4 +394,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#08c',
     marginLeft: 5
   },
+  size80: {
+    width: '80%'
+  }
 });

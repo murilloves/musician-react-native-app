@@ -17,7 +17,7 @@ export default class HeaderComponent extends React.Component {
                         <TouchableOpacity onPress={ () => navigate(navTo) }>
                             <Ionicons
                                 style={ styles.iconHeader }
-                                name={ Platform.OS === 'ios'? 'ios-arrow-round-back' : 'md-arrow-round-back' }
+                                name={ Platform.OS === 'ios'? 'ios-arrow-back' : 'md-arrow-back' }
                             />
                         </TouchableOpacity>
                     }

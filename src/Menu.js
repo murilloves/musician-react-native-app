@@ -34,6 +34,6 @@ const MainRoutes = {
 }
 
 const MainNavigator = createSwitchNavigator(MainRoutes, {
-    initialRouteName: 'Auth'
+    initialRouteName: 'PlaylistInfo'
 })
 export default MainNavigator

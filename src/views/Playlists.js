@@ -33,7 +33,7 @@ export default class Playlists extends Component {
 
   loadPlaylists = async () => {
     if (!axios.defaults.headers.common['Authorization']) {
-      axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNTVjMzYxNjU2YWFjMzhmMDI3ZjlkNSIsIm5hbWUiOiJUZXN0ZSIsImF2YXRhciI6Ii8vd3d3LmdyYXZhdGFyLmNvbS9hdmF0YXIvNzUzYmI4YzFiMzY3MTkyOTkwNzgzOWI2YTE1MmJmMjE_cz0yMDAmcj1wZyZkPW1tIiwiaWF0IjoxNTUwNzIwMDMzLCJleHAiOjE1NTA3MjM2MzN9.9V9UawEqHel9Dodji_InRXSw3y4OzrSAadXKVOPD2Rs'
+      axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNTVjMzYxNjU2YWFjMzhmMDI3ZjlkNSIsIm5hbWUiOiJUZXN0ZSIsImF2YXRhciI6Ii8vd3d3LmdyYXZhdGFyLmNvbS9hdmF0YXIvNzUzYmI4YzFiMzY3MTkyOTkwNzgzOWI2YTE1MmJmMjE_cz0yMDAmcj1wZyZkPW1tIiwiaWF0IjoxNTUxNDA3NzE5LCJleHAiOjE1NTE0MTEzMTl9._66UwvYQWnI5Y56jzI0H3TkM_ShAHmvDCIXvVZDuoZE'
     }
     try {
       const res = await axios.get(`${server}/playlists/all`)
@@ -94,8 +94,9 @@ export default class Playlists extends Component {
             )
           }
           {
-            !this.state.isEditing && (this.state.playlists && this.state.playlists.length >= 0) && (
-              <View style={styles.playlistsContainer}>
+            !this.state.isEditing && (this.state.playlists && this.state.playlists.length >= 0) &&
+            (
+              <View>
                 {
                   this.state.playlists.map( (playlist) => (
                     <TouchableOpacity key={playlist._id} style={styles.playlistsCard} onPress={ this.enterPlaylist.bind(this,playlist) }>
@@ -110,16 +111,14 @@ export default class Playlists extends Component {
               </View>
             )
           }
-          <View>
-            {
-              !this.state.isEditing &&
-              <View style={styles.alignRight}>
-                <TouchableOpacity style={styles.iconBtn} onPress={() => this.setState({ ...this.state, isEditing: !this.state.isEditing })}>
-                  <Text style={styles.iconBig}>+</Text>
-                </TouchableOpacity>
-              </View>
-            }
-          </View>
+          {
+            !this.state.isEditing &&
+            <View style={styles.alignRight}>
+              <TouchableOpacity style={styles.iconBtn} onPress={() => this.setState({ ...this.state, isEditing: !this.state.isEditing })}>
+                <Text style={styles.iconBig}>+</Text>
+              </TouchableOpacity>
+            </View>
+          }
         </ScrollView>
       </View>
     );
@@ -137,6 +136,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#00C851',
   },
   scrollView: {
+    marginTop: 80,
     flex: 1,
   },
   placeholder: {
@@ -151,12 +151,18 @@ const styles = StyleSheet.create({
   playlistsCard: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#eee',
+    backgroundColor: '#0099CC',
     marginTop: 1,
-    padding: 20
+    padding: 20,
+    margin: '3%',
+    marginTop: '3%',
+    marginBottom: '0%',
+    borderRadius: 100,
+    borderWidth: 1,
+    borderColor: '#b8ecff'
   },
   playlistsText: {
-    color: '#444',
+    color: '#fff',
     fontSize: 20
   },
   iconEdit: {
@@ -175,21 +181,13 @@ const styles = StyleSheet.create({
   iconBtn: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f5f5f5',
-    borderRadius: 50,
-    width: 50,
-    height: 50
-  },
-  iconBtn: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#eee',
     borderRadius: 50,
     width: 50,
     height: 50
   },
   inputContainer: {
-    marginTop: 120,
+    marginTop: 20,
     flex: 1,
     alignItems: 'center',
   },
