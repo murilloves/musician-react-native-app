@@ -33,7 +33,7 @@ export default class Playlists extends Component {
 
   loadPlaylists = async () => {
     if (!axios.defaults.headers.common['Authorization']) {
-      axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNTVjMzYxNjU2YWFjMzhmMDI3ZjlkNSIsIm5hbWUiOiJUZXN0ZSIsImF2YXRhciI6Ii8vd3d3LmdyYXZhdGFyLmNvbS9hdmF0YXIvNzUzYmI4YzFiMzY3MTkyOTkwNzgzOWI2YTE1MmJmMjE_cz0yMDAmcj1wZyZkPW1tIiwiaWF0IjoxNTUxNDA3NzE5LCJleHAiOjE1NTE0MTEzMTl9._66UwvYQWnI5Y56jzI0H3TkM_ShAHmvDCIXvVZDuoZE'
+      axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNTVjMzYxNjU2YWFjMzhmMDI3ZjlkNSIsIm5hbWUiOiJUZaaaXN0ZSIsImF2YXRhciI6Ii8vd3d3LmdyYXZhdGFyLmNvbS9hdmF0YXIvNzUzYmI4YzFiMzY3MTkyOTkwNzgzOWI2YTE1MmJmMjE_cz0yMDAmcj1wZyZkPW1tIiwiaWF0IjoxNTUxNDA3NzE5LCJleHAiOjE1NTE0MTEzMTl9._66UwvYQWnI5Y56jzI0H3TkM_ShAHmvDCIXvVZDuoZE'
     }
     try {
       const res = await axios.get(`${server}/playlists/all`)
