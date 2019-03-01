@@ -4,13 +4,14 @@ import {
   StyleSheet,
   Text,
   View,
+  Alert,
   TouchableOpacity,
   AsyncStorage,
   ScrollView,
   KeyboardAvoidingView,
   TextInput
 } from 'react-native'
-// import { Ionicons } from '@expo/vector-icons'
+import { Ionicons } from '@expo/vector-icons'
 
 import HeaderComponent from '../components/Header'
 import axios from 'axios';
@@ -20,7 +21,8 @@ export default class Playlists extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isEditing: false,
+      creatingNew: false,
+      editingPlaylist: false,
       playlists: null,
       newPlaylistName: null,
       selectedPlaylist: null
@@ -43,16 +45,6 @@ export default class Playlists extends Component {
     }
   }
 
-  enterPlaylist = async (playlist) => {
-    try {
-      await AsyncStorage.setItem('selectedPlaylistName', playlist.playlistName)
-      await AsyncStorage.setItem('selectedPlaylistId', playlist._id)
-      this.props.navigation.navigate('PlaylistInfo')
-    } catch (err) {
-      // Error saving data
-    }
-  }
-
   createNewPlaylist = async () => {
     try {
       await axios.post(`${server}/playlists`, {
@@ -60,7 +52,7 @@ export default class Playlists extends Component {
       })
 
       this.loadPlaylists()
-      this.setState({ ...this.state, isEditing: !this.state.isEditing })
+      this.setState({ ...this.state, creatingNew: !this.state.creatingNew })
     } catch (err) {
       showError(JSON.stringify(err.response.data))
     }
@@ -72,7 +64,7 @@ export default class Playlists extends Component {
         <HeaderComponent title='Minhas Playlists' />
         <ScrollView style={styles.scrollView}>
           {
-            this.state.isEditing &&
+            this.state.creatingNew &&
             (
               <KeyboardAvoidingView behavior='padding' style={styles.inputContainer}>
                 <TextInput
@@ -83,7 +75,7 @@ export default class Playlists extends Component {
                   onChangeText={title => this.setState({ ...this.state, newPlaylistName: title })}
                 />
                 <View style={styles.btnRow}>
-                  <TouchableOpacity style={styles.cancelButton} onPress={() => this.setState({ ...this.state, isEditing: !this.state.isEditing })}>
+                  <TouchableOpacity style={styles.cancelButton} onPress={() => this.setState({ ...this.state, creatingNew: !this.state.creatingNew })}>
                     <Text>Cancelar</Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={this.createNewPlaylist} style={styles.addButton}>
@@ -94,27 +86,21 @@ export default class Playlists extends Component {
             )
           }
           {
-            !this.state.isEditing && (this.state.playlists && this.state.playlists.length >= 0) &&
+            !this.state.creatingNew && (this.state.playlists && this.state.playlists.length >= 0) &&
             (
               <View>
                 {
                   this.state.playlists.map( (playlist) => (
-                    <TouchableOpacity key={playlist._id} style={styles.playlistsCard} onPress={ this.enterPlaylist.bind(this,playlist) }>
-                      <Text key={playlist._id} style={styles.playlistsText}>{playlist.playlistName}</Text>
-                      {/* <Ionicons
-                        style={ styles.iconEdit }
-                        name={ Platform.OS === 'ios'? 'ios-create' : 'md-create' }
-                      /> */}
-                    </TouchableOpacity>
+                    <EditPlaylist key={playlist._id} playlist={playlist} playlistId={playlist._id} />
                   ))
                 }
               </View>
             )
           }
           {
-            !this.state.isEditing &&
+            !this.state.creatingNew &&
             <View style={styles.alignRight}>
-              <TouchableOpacity style={styles.iconBtn} onPress={() => this.setState({ ...this.state, isEditing: !this.state.isEditing })}>
+              <TouchableOpacity style={styles.iconBtn} onPress={() => this.setState({ ...this.state, creatingNew: !this.state.creatingNew })}>
                 <Text style={styles.iconBig}>+</Text>
               </TouchableOpacity>
             </View>
@@ -122,6 +108,106 @@ export default class Playlists extends Component {
         </ScrollView>
       </View>
     );
+  }
+}
+
+export class EditPlaylist extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      editingPlaylist: false,
+      wasDeleted: false,
+      playlistName: this.props.playlist.playlistName,
+      playlistId: this.props.playlistId
+    }
+  }
+
+  editPlaylist = async () => {
+
+  }
+
+  enterPlaylist = async () => {
+    try {
+      await AsyncStorage.setItem('selectedPlaylistName', this.props.playlist.playlistName)
+      await AsyncStorage.setItem('selectedPlaylistId', this.state.playlistId)
+      this.props.navigation.navigate('PlaylistInfo')
+    } catch (err) {
+      // Error saving data
+    }
+  }
+
+  dialogDeletePlaylist = () => {
+    Alert.alert(
+      'Deletar playlist',
+      'Deseja realmente excluir esta playlist?',
+      [
+        {
+          text: 'Cancelar',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'Sim', onPress: () => this.deletePlaylist()
+        },
+      ],
+      {cancelable: true},
+    );
+  }
+
+  saveModifiedPlaylist = () => {
+
+  }
+
+  deletePlaylist = async () => {
+    await axios.delete(`${server}/playlists/${this.state.playlistId}`)
+
+    this.setState({ ...this.state, wasDeleted: true })
+
+    Alert.alert('Playlist deletada', '')
+  }
+
+  render() {
+    return (
+      !this.state.wasDeleted &&
+      <View key={this.state.playlistId}>
+        <TouchableOpacity style={styles.playlistsCard} onPress={ this.enterPlaylist.bind(this) }>
+          <Text style={styles.playlistsText}>{this.state.playlistName}</Text>
+          <TouchableOpacity style={styles.iconBtn} onPress={() => this.setState({ ...this.state, editingPlaylist: !this.state.editingPlaylist })}>
+            <Ionicons
+              style={ styles.iconEdit }
+              name={ Platform.OS === 'ios'? 'ios-create' : 'md-create' }
+            />
+          </TouchableOpacity>
+        </TouchableOpacity>
+        {
+          this.state.editingPlaylist &&
+          <KeyboardAvoidingView behavior='padding' style={styles.inputContainer}>
+            <TouchableOpacity style={{ paddingBottom: 20 }} onPress={() => this.dialogDeletePlaylist()}>
+              <Ionicons
+                style={[ styles.iconMid, {color: 'red'}]}
+                name={ Platform.OS === 'ios'? 'ios-trash' : 'md-trash' }
+              />
+            </TouchableOpacity>
+            <TextInput
+              style={styles.input}
+              placeholder='Nome da playlist'
+              placeholderTextColor='rgba(0,0,0,0.5)'
+              value={this.state.playlistName}
+              onChangeText={playlistName => this.setState({ ...this.state, playlistName: playlistName })}
+            />
+            <View style={styles.btnRow}>
+              <TouchableOpacity style={styles.cancelButton} onPress={() => this.setState({ ...this.state, editingPlaylist: !this.state.editingPlaylist })}>
+                <Text>Cancelar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={this.createNewPlaylist} style={styles.addButton}>
+                <Text>Salvar</Text>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
+        }
+      </View>
+    )
   }
 }
 
@@ -150,10 +236,13 @@ const styles = StyleSheet.create({
   },
   playlistsCard: {
     flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: '#0099CC',
     marginTop: 1,
     padding: 20,
+    paddingTop: 10,
     margin: '3%',
     marginTop: '3%',
     marginBottom: '0%',
@@ -177,6 +266,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     color: '#444',
     fontSize: 30
+  },
+  iconMid: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#555',
+    fontSize: 25
   },
   iconBtn: {
     alignItems: 'center',

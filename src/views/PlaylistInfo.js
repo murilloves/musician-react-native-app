@@ -161,8 +161,8 @@ export class SongDescription extends React.Component {
     }
   }
 
-  enableDisableCard = () => {
-    this.setState({ disabled: !this.state.disabled})
+  clickCard = () => {
+    this.setState({ clicked: !this.state.clicked})
   }
 
   updateSongInPlaylist = async () => {
@@ -191,18 +191,19 @@ export class SongDescription extends React.Component {
 
   dialogDeleteSong = () => {
     Alert.alert(
-      'Delete song',
-      'Do you really want to delete?',
+      'Deletar música',
+      'Deseja remover esta música da playlist?',
       [
         {
-          text: 'Cancel',
+          text: 'Não',
           onPress: () => console.log('Cancel Pressed'),
           style: 'cancel',
         },
         {
-          text: 'Delete', onPress: () => this.deleteSongFromPlaylist()},
+          text: 'Sim', onPress: () => this.deleteSongFromPlaylist()
+        },
       ],
-      {cancelable: false},
+      {cancelable: true},
     );
   }
 
@@ -218,68 +219,72 @@ export class SongDescription extends React.Component {
   render() {
     return (
       !this.state.wasDeleted &&
-      <TouchableWithoutFeedback onPress={() => this.enableDisableCard()}>
-          <View>
-            {
-              <View style={this.state.disabled ? styles.disabledCard : styles.playlistsCard}>
-                <View style={styles.size80}>
-                  {
-                    this.state.editDesc &&
-                    <Text style={styles.smallText}>{1 + this.props.index} - {this.state.editDesc}</Text>
-                  }
-                  {
-                    <Text style={styles.normalText}>{this.state.editKey !== null ? `(${this.state.editKey}) ` : ''}{this.state.editTitle}</Text>
-                  }
-                </View>
-                <TouchableOpacity style={styles.iconBtn} onPress={() => this.setState({ ...this.state, isEditing: !this.state.isEditing })}>
-                  <Ionicons
-                    style={ styles.iconMid }
-                    name={ Platform.OS === 'ios'? 'ios-create' : 'md-create' }
-                    />
+      <TouchableWithoutFeedback onPress={() => this.clickCard()}>
+        <View>
+          {
+            <View style={this.state.clicked ? styles.selectedCard : styles.playlistsCard}>
+              <View style={styles.size80}>
+                {
+                  this.state.editDesc &&
+                  <Text style={[styles.smallText, this.state.clicked ? styles.textWhite : styles.textPrimary]}>
+                    {1 + this.props.index} - {this.state.editDesc}
+                  </Text>
+                }
+                {
+                  <Text style={[styles.normalText, this.state.clicked ? styles.textWhite : styles.textPrimary]}>
+                    {this.state.editKey !== null ? `(${this.state.editKey}) ` : ''}{this.state.editTitle}
+                  </Text>
+                }
+              </View>
+              <TouchableOpacity style={styles.iconBtn} onPress={() => this.setState({ ...this.state, isEditing: !this.state.isEditing })}>
+                <Ionicons
+                  style={ styles.iconMid }
+                  name={ Platform.OS === 'ios'? 'ios-create' : 'md-create' }
+                  />
+              </TouchableOpacity>
+            </View>
+          }
+          {
+            this.state.isEditing &&
+            <KeyboardAvoidingView behavior='padding' style={styles.inputContainerEdit}>
+              <TouchableOpacity style={styles.alignLeft} onPress={this.dialogDeleteSong}>
+                <Ionicons
+                  style={[ styles.iconMid, {color: 'red'}]}
+                  name={ Platform.OS === 'ios'? 'ios-trash' : 'md-trash' }
+                  />
+              </TouchableOpacity>
+              <TextInput
+                style={styles.input}
+                placeholder='Nome da música'
+                placeholderTextColor='rgba(255,255,255,0.5)'
+                value={this.state.editTitle}
+                onChangeText={title => this.setState({ ...this.state, editTitle: title })}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder='Tonalidade'
+                placeholderTextColor='rgba(255,255,255,0.5)'
+                value={this.state.editKey}
+                onChangeText={key => this.setState({ ...this.state, editKey: key })}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder='Descrição'
+                placeholderTextColor='rgba(255,255,255,0.5)'
+                value={this.state.editDesc}
+                onChangeText={desc => this.setState({ ...this.state, editDesc: desc })}
+              />
+              <View style={styles.btnRow}>
+                <TouchableOpacity style={styles.cancelButton} onPress={() => this.setState({ ...this.state, isEditing: !this.state.isEditing })}>
+                  <Text>Cancelar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={this.updateSongInPlaylist} style={styles.modifyButton}>
+                  <Text>Alterar</Text>
                 </TouchableOpacity>
               </View>
-            }
-            {
-              this.state.isEditing &&
-              <KeyboardAvoidingView behavior='padding' style={styles.inputContainerEdit}>
-                <TouchableOpacity style={styles.alignLeft} onPress={this.dialogDeleteSong}>
-                  <Ionicons
-                    style={[ styles.iconMid, {color: 'red'}]}
-                    name={ Platform.OS === 'ios'? 'ios-trash' : 'md-trash' }
-                    />
-                </TouchableOpacity>
-                <TextInput
-                  style={styles.input}
-                  placeholder='Nome da música'
-                  placeholderTextColor='rgba(255,255,255,0.5)'
-                  value={this.state.editTitle}
-                  onChangeText={title => this.setState({ ...this.state, editTitle: title })}
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder='Tonalidade'
-                  placeholderTextColor='rgba(255,255,255,0.5)'
-                  value={this.state.editKey}
-                  onChangeText={key => this.setState({ ...this.state, editKey: key })}
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder='Descrição'
-                  placeholderTextColor='rgba(255,255,255,0.5)'
-                  value={this.state.editDesc}
-                  onChangeText={desc => this.setState({ ...this.state, editDesc: desc })}
-                />
-                <View style={styles.btnRow}>
-                  <TouchableOpacity style={styles.cancelButton} onPress={() => this.setState({ ...this.state, isEditing: !this.state.isEditing })}>
-                    <Text>Cancelar</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={this.updateSongInPlaylist} style={styles.modifyButton}>
-                    <Text>Alterar</Text>
-                  </TouchableOpacity>
-                </View>
-              </KeyboardAvoidingView>
-            }
-          </View>
+            </KeyboardAvoidingView>
+          }
+        </View>
       </TouchableWithoutFeedback>
     )
   }
@@ -301,19 +306,23 @@ const styles = StyleSheet.create({
     marginTop: 1,
     padding: 20
   },
-  disabledCard: {
+  selectedCard: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#aaa',
+    backgroundColor: '#0099CC',
     marginTop: 1,
     padding: 20
   },
   normalText: {
-    color: '#444',
     fontSize: 20
   },
+  textWhite: {
+    color: '#fff'
+  },
+  textPrimary: {
+    color: '#444'
+  },
   smallText: {
-    color: '#444',
     fontSize: 15
   },
   iconBtn: {
