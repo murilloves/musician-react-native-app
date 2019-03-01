@@ -91,7 +91,7 @@ export default class Playlists extends Component {
               <View>
                 {
                   this.state.playlists.map( (playlist) => (
-                    <EditPlaylist key={playlist._id} playlist={playlist} playlistId={playlist._id} />
+                    <EditPlaylist key={playlist._id} playlist={playlist} playlistId={playlist._id} navigation={this.props.navigation} />
                   ))
                 }
               </View>
@@ -100,7 +100,12 @@ export default class Playlists extends Component {
           {
             !this.state.creatingNew &&
             <View style={styles.alignRight}>
-              <TouchableOpacity style={styles.iconBtn} onPress={() => this.setState({ ...this.state, creatingNew: !this.state.creatingNew })}>
+              <TouchableOpacity
+                style={styles.iconBtn}
+                onPress={() => {
+                  this.setState({ ...this.state, creatingNew: !this.state.creatingNew });
+                  !this.state.creatingNew ? this.loadPlaylists() : null
+                }}>
                 <Text style={styles.iconBig}>+</Text>
               </TouchableOpacity>
             </View>
@@ -111,7 +116,7 @@ export default class Playlists extends Component {
   }
 }
 
-export class EditPlaylist extends React.Component {
+export class EditPlaylist extends Component {
   constructor(props) {
     super(props)
 
@@ -129,11 +134,11 @@ export class EditPlaylist extends React.Component {
 
   enterPlaylist = async () => {
     try {
-      await AsyncStorage.setItem('selectedPlaylistName', this.props.playlist.playlistName)
+      await AsyncStorage.setItem('selectedPlaylistName', this.state.playlistName)
       await AsyncStorage.setItem('selectedPlaylistId', this.state.playlistId)
       this.props.navigation.navigate('PlaylistInfo')
     } catch (err) {
-      // Error saving data
+      Alert.alert('', JSON.stringify(err))
     }
   }
 
@@ -171,7 +176,7 @@ export class EditPlaylist extends React.Component {
     return (
       !this.state.wasDeleted &&
       <View key={this.state.playlistId}>
-        <TouchableOpacity style={styles.playlistsCard} onPress={ this.enterPlaylist.bind(this) }>
+        <TouchableOpacity style={styles.playlistsCard} onPress={ this.enterPlaylist }>
           <Text style={styles.playlistsText}>{this.state.playlistName}</Text>
           <TouchableOpacity style={styles.iconBtn} onPress={() => this.setState({ ...this.state, editingPlaylist: !this.state.editingPlaylist })}>
             <Ionicons
