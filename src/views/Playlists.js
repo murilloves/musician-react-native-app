@@ -128,8 +128,27 @@ export class EditPlaylist extends Component {
     }
   }
 
-  editPlaylist = async () => {
+  editPlaylist = () => {
+    const modifiedPlaylist = {
+      playlistName: this.state.playlistName,
+      playlistId: this.state.playlistId
+    }
 
+    this.saveModifiedPlaylist(modifiedPlaylist)
+  }
+
+  saveModifiedPlaylist = async (modifiedPlaylist) => {
+    try {
+      await axios.post(`${server}/playlists`, modifiedPlaylist)
+
+      this.setState({ ...this.state, editingPlaylist: false })
+
+      Alert.alert('Sucesso', 'Playlist alterada')
+    } catch (err) {
+      showError(JSON.stringify(err.response.data))
+
+      Alert.alert('Erro', 'Não foi possível modificar')
+    }
   }
 
   enterPlaylist = async () => {
@@ -158,10 +177,6 @@ export class EditPlaylist extends Component {
       ],
       {cancelable: true},
     );
-  }
-
-  saveModifiedPlaylist = () => {
-
   }
 
   deletePlaylist = async () => {
@@ -205,7 +220,7 @@ export class EditPlaylist extends Component {
               <TouchableOpacity style={styles.cancelButton} onPress={() => this.setState({ ...this.state, editingPlaylist: !this.state.editingPlaylist })}>
                 <Text>Cancelar</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={this.createNewPlaylist} style={styles.addButton}>
+              <TouchableOpacity onPress={this.editPlaylist} style={styles.addButton}>
                 <Text>Salvar</Text>
               </TouchableOpacity>
             </View>
