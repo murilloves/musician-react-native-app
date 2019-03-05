@@ -14,6 +14,7 @@ import {
 import { Ionicons } from '@expo/vector-icons'
 
 import HeaderComponent from '../components/Header'
+import FooterNavigationComponent from '../components/FooterNavigation'
 import axios from 'axios';
 import { server, showError } from '../commons/common';
 
@@ -111,6 +112,7 @@ export default class Playlists extends Component {
             </View>
           }
         </ScrollView>
+        <FooterNavigationComponent navigation={this.props.navigation} currentPage='Playlists' />
       </View>
     );
   }
@@ -243,6 +245,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     marginTop: 80,
+    marginBottom: 60,
     flex: 1,
   },
   placeholder: {

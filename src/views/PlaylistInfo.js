@@ -1,5 +1,6 @@
 import React from 'react'
 import HeaderComponent from '../components/Header'
+import FooterNavigationComponent from '../components/FooterNavigation'
 import {
   AsyncStorage,
   StyleSheet,
@@ -140,6 +141,7 @@ export default class PlaylistInfo extends React.Component {
             </View>
           }
         </ScrollView>
+        <FooterNavigationComponent navigation={this.props.navigation} />
       </View>
     );
   }
@@ -297,6 +299,7 @@ const styles = StyleSheet.create({
   },
   container: {
     marginTop: 85,
+    marginBottom: 60,
     flex: 1,
   },
   playlistsCard: {
