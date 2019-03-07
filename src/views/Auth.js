@@ -4,7 +4,6 @@ import {
     Text,
     TextInput,
     View,
-    ImageBackground,
     TouchableOpacity,
     Alert,
     KeyboardAvoidingView
@@ -12,8 +11,6 @@ import {
 
 import axios from 'axios'
 import { server, showError } from '../commons/common'
-// import commonStyles from '../commonStyles'
-// import backGroundImage from '../../assets/imgs.login.jpg'
 
 export default class Auth extends Component {
     state = {
@@ -22,9 +19,24 @@ export default class Auth extends Component {
         email: '',
         password: '',
         passwordConfirm: '',
+        submitting: false,
+        submitAnimation: '.'
+    }
+
+    startLoadingAnimation = () => {
+        setInterval(() => {
+            let commas = this.state.submitAnimation
+            if (commas.length > 4) {
+                commas = ''
+            }
+            this.setState({ ...this.state, submitAnimation: `${commas} .` })
+        }, 300);
     }
 
     signinOrSignup = async () => {
+        this.startLoadingAnimation()
+        this.setState({ ...this.state, submitting: true })
+
         if (this.state.stageNew) {
             try {
                 await axios.post(`${server}/users/register`, {
@@ -43,6 +55,8 @@ export default class Auth extends Component {
                 } else {
                     showError(JSON.stringify(err.response))
                 }
+
+                this.setState({ ...this.state, submitting: false })
             }
         } else {
             try {
@@ -64,6 +78,8 @@ export default class Auth extends Component {
                     showError(JSON.stringify(err.response.data.messages))
                     // Alert.alert('Erro!', 'Usuário ou senha incorretos.')
                 }
+
+                this.setState({ ...this.state, submitting: false })
             }
         }
     }
@@ -71,10 +87,6 @@ export default class Auth extends Component {
     render() {
         return (
             <KeyboardAvoidingView behavior='padding' style={styles.container}>
-                {/* <ImageBackground
-                    source={{uri: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png'}}
-                    style={styles.img}
-                /> */}
                 <Text style={styles.welcome}>
                     Museekr
                 </Text>
@@ -82,9 +94,6 @@ export default class Auth extends Component {
                     {this.state.stageNew ? 'Crie sua conta. É muito fácil!': 'A melhor plataforma para músicos do mundo todo!'}
                 </Text>
                 <View>
-                    {/* <Text style={styles.createAccount}>
-                        {this.state.stageNew ? 'Crie sua conta. É muito fácil!': ''}
-                    </Text> */}
                     {
                         this.state.stageNew && 
                         <TextInput
@@ -121,15 +130,28 @@ export default class Auth extends Component {
                             onChangeText={passwordConfirm => this.setState({ passwordConfirm })}
                         />
                     }
-                    <TouchableOpacity onPress={this.signinOrSignup} style={styles.button}>
+                    <TouchableOpacity
+                        onPress={this.signinOrSignup}
+                        style={this.state.submitting ? styles.disabledButton : styles.button}
+                        disabled={this.state.submitting}>
                         <View>
-                            <Text style={styles.loginSignin}>
-                                {this.state.stageNew ? 'CADASTRAR' : 'ENTRAR'}
-                            </Text>
+                            {
+                                this.state.stageNew
+                                ? 
+                                    <Text style={styles.loginSignin}>
+                                        {this.state.submitting ? `${this.state.submitAnimation} CADASTRANDO${this.state.submitAnimation}` : `CADASTRAR`}
+                                    </Text>
+                                :
+                                    <Text style={styles.loginSignin}>
+                                        {this.state.submitting ? `${this.state.submitAnimation} ENTRANDO${this.state.submitAnimation}` : `ENTRAR`}
+                                    </Text>
+                            }
                         </View>
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={() => this.setState({stageNew: !this.state.stageNew})}>
+                <TouchableOpacity
+                    onPress={() => this.setState({stageNew: !this.state.stageNew})}
+                    disabled={this.state.submitting}>
                     <Text style={styles.changeLoginSignin}>
                         {this.state.stageNew ? 'Já possuo conta!' : 'Ainda não tenho conta'}
                     </Text>
@@ -176,6 +198,15 @@ const styles = StyleSheet.create({
         height: 50,
         width: 300,
         backgroundColor: 'rgba(0,0,0,0.3)',
+        marginBottom: 15,
+        paddingHorizontal: 15
+    },
+    disabledButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 50,
+        width: 300,
+        backgroundColor: 'rgba(255,255,255,0.1)',
         marginBottom: 15,
         paddingHorizontal: 15
     },

@@ -27,6 +27,7 @@ export default class PlaylistInfo extends React.Component {
       playlistId: null,
       songs: [],
       isEditing: false,
+      saving: false,
       editKey: null,
       editTitle: null,
       editDesc: null,
@@ -66,6 +67,8 @@ export default class PlaylistInfo extends React.Component {
   }
 
   addSongToPlaylist = async () => {
+    this.setState({ ...this.state, saving: true })
+
     try {
       await axios.post(`${server}/playlists/${this.state.playlistId}/addSong`, {
         title: this.state.editTitle,
@@ -76,8 +79,10 @@ export default class PlaylistInfo extends React.Component {
 
       Alert.alert('Sucesso!', 'Música adicionada.')
       this.getPlaylistSongs(this.state.playlistId)
-      this.setState({ isEditing:false })
+      this.setState({ isEditing:false, editKey: null, editTitle: null, editDesc: null, saving: false })
     } catch (err) {
+      this.setState({ ...this.state, saving: false })
+
       if (err.response.status === 400) {
         const jsonString = err.response.data
         Alert.alert('Dados inválidos.', JSON.stringify(jsonString).replace(/"/g, '').replace(/,/g, '\n\n').replace('{','').replace('}', '').replace(/:/g, ' : '))
@@ -121,8 +126,12 @@ export default class PlaylistInfo extends React.Component {
                   <TouchableOpacity style={styles.cancelButton} onPress={() => this.setState({ ...this.state, isEditing: !this.state.isEditing })}>
                     <Text>Cancelar</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={this.addSongToPlaylist} style={styles.addButton}>
-                    <Text>Adicionar</Text>
+                  <TouchableOpacity
+                    onPress={this.addSongToPlaylist}
+                    style={this.state.saving ? styles.disabledAddButton : styles.addButton}
+                    disabled={this.state.saving}
+                    >
+                    <Text>{this.state.saving ? 'Adicionando...' : 'Adicionar'}</Text>
                   </TouchableOpacity>
                 </View>
               </KeyboardAvoidingView>
@@ -227,14 +236,13 @@ export class SongDescription extends React.Component {
             <View style={this.state.clicked ? styles.selectedCard : styles.playlistsCard}>
               <View style={styles.size80}>
                 {
-                  this.state.editDesc &&
                   <Text style={[styles.smallText, this.state.clicked ? styles.textWhite : styles.textPrimary]}>
-                    {1 + this.props.index} - {this.state.editDesc}
+                    {1 + this.props.index}{this.state.editDesc ? ` - ${this.state.editDesc}` : ''}
                   </Text>
                 }
                 {
                   <Text style={[styles.normalText, this.state.clicked ? styles.textWhite : styles.textPrimary]}>
-                    {this.state.editKey !== null ? `(${this.state.editKey}) ` : ''}{this.state.editTitle}
+                    {this.state.editKey ? `(${this.state.editKey}) ` : ''}{this.state.editTitle}
                   </Text>
                 }
               </View>
@@ -386,7 +394,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 50,
-    flexGrow: 1,
+    flex: 1,
     backgroundColor: '#eee',
     marginRight: 5
   },
@@ -394,8 +402,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 50,
-    flexGrow: 1,
+    flex: 1,
     backgroundColor: '#00C851',
+    marginLeft: 5
+  },
+  disabledAddButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 50,
+    flex: 1,
+    backgroundColor: '#87ffb7',
     marginLeft: 5
   },
   modifyButton: {

@@ -24,6 +24,7 @@ export default class Playlists extends Component {
     this.state = {
       creatingNew: false,
       editingPlaylist: false,
+      saving: false,
       playlists: null,
       newPlaylistName: null,
       selectedPlaylist: null
@@ -47,15 +48,19 @@ export default class Playlists extends Component {
   }
 
   createNewPlaylist = async () => {
+    this.setState({ ...this.state, saving: true })
+
     try {
       await axios.post(`${server}/playlists`, {
         playlistName: this.state.newPlaylistName
       })
 
       this.loadPlaylists()
-      this.setState({ ...this.state, creatingNew: !this.state.creatingNew })
+      this.setState({ ...this.state, creatingNew: !this.state.creatingNew, saving: false })
     } catch (err) {
       showError(JSON.stringify(err.response.data))
+
+      this.setState({ ...this.state, saving: false })
     }
   }
 
@@ -79,8 +84,11 @@ export default class Playlists extends Component {
                   <TouchableOpacity style={styles.cancelButton} onPress={() => this.setState({ ...this.state, creatingNew: !this.state.creatingNew })}>
                     <Text>Cancelar</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={this.createNewPlaylist} style={styles.addButton}>
-                    <Text>Adicionar</Text>
+                  <TouchableOpacity
+                    onPress={this.createNewPlaylist}
+                    style={this.state.saving ? styles.disabledAddButton : styles.addButton}
+                    disabled={this.state.saving}>
+                    <Text>{this.state.saving ? 'Adicionando...' : 'Adicionar'}</Text>
                   </TouchableOpacity>
                 </View>
               </KeyboardAvoidingView>
@@ -321,7 +329,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 50,
-    flexGrow: 1,
+    flex: 1,
     backgroundColor: '#eee',
     marginRight: 5
   },
@@ -329,8 +337,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 50,
-    flexGrow: 1,
+    flex: 1,
     backgroundColor: '#33b5e5',
+    marginLeft: 5
+  },
+  disabledAddButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 50,
+    flex: 1,
+    backgroundColor: '#b3d0db',
     marginLeft: 5
   },
   btnRow: {
