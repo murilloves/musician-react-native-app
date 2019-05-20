@@ -7,6 +7,19 @@ export default class HeaderComponent extends React.Component {
         super(props)
     }
 
+    state = {
+        menuOpened: false
+    }
+
+    openCloseMenu = () => {
+        console.log(this.props, this.state.menuOpened)
+        this.state.menuOpened
+            ? this.props.navigation.navigate('DrawerClose')
+            : this.props.navigation.navigate('DrawerOpen')
+
+        this.setState({ ...this.state, menuOpened : !this.state.menuOpened })
+    }
+
     render () {
         const navigate = this.props.navigation ? this.props.navigation.navigate : null;
         const navTo = this.props.navTo ? this.props.navTo : 'HomePage';
@@ -22,12 +35,14 @@ export default class HeaderComponent extends React.Component {
                         </TouchableOpacity>
                     }
                     <Text style={ styles.textHeader }>{ this.props.title }</Text>
-                    <TouchableOpacity>
-                        {/* <Ionicons
-                            style={ styles.iconHeader }
-                            name={ Platform.OS === 'ios'? 'ios-add' : 'md-add' }
-                        /> */}
-                    </TouchableOpacity>
+                    {navigate &&
+                        <TouchableOpacity onPress={ () => this.openCloseMenu() }>
+                            <Ionicons
+                                style={ styles.iconHeader }
+                                name={ Platform.OS === 'ios'? 'ios-menu' : 'md-menu' }
+                                />
+                        </TouchableOpacity>
+                    }
                 </View>
             </View>
         )
@@ -42,6 +57,7 @@ const androidNotchHeight = 24
 const styles = StyleSheet.create({
     container: {
         position: 'absolute',
+        flex: 1,
         backgroundColor: secondaryColor,
         left: 0,
         right: 0,
@@ -63,9 +79,10 @@ const styles = StyleSheet.create({
     },
     wrap: {
         flexWrap: 'wrap',
-        alignItems: 'flex-start',
+        flex: 1,
+        alignItems: 'center',
         flexDirection:'row',
-        justifyContent: 'flex-start'
+        justifyContent: 'space-around'
     }
 })
 

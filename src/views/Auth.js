@@ -20,11 +20,13 @@ export default class Auth extends Component {
         password: '',
         passwordConfirm: '',
         submitting: false,
-        submitAnimation: '.'
+        submitAnimation: '.',
     }
 
+    intervalAnimation;
+
     startLoadingAnimation = () => {
-        setInterval(() => {
+        this.intervalAnimation = setInterval(() => {
             let commas = this.state.submitAnimation
             if (commas.length > 4) {
                 commas = ''
@@ -48,6 +50,7 @@ export default class Auth extends Component {
 
                 Alert.alert('Sucesso!', 'Usuário cadastrado.')
                 this.setState({ stageNew: false })
+                clearInterval(this.intervalAnimation)
             } catch (err) {
                 if (err.response.status === 400) {
                     const jsonString = err.response.data
@@ -57,6 +60,7 @@ export default class Auth extends Component {
                 }
 
                 this.setState({ ...this.state, submitting: false })
+                clearInterval(this.intervalAnimation)
             }
         } else {
             try {
@@ -70,6 +74,7 @@ export default class Auth extends Component {
                 // Alert.alert('Logado com sucesso', `Token: ${axios.defaults.headers.common['Authorization']}`)
 
                 this.props.navigation.navigate(pageToGoAfterLogin)
+                clearInterval(this.intervalAnimation)
             } catch (err) {
                 if (err.response.status === 400) {
                     const jsonString = err.response.data
@@ -80,6 +85,7 @@ export default class Auth extends Component {
                 }
 
                 this.setState({ ...this.state, submitting: false })
+                clearInterval(this.intervalAnimation)
             }
         }
     }

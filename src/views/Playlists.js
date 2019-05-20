@@ -243,7 +243,8 @@ export class EditPlaylist extends Component {
 
 const styles = StyleSheet.create({
   wholeScreen: {
-    flex: 1
+    flex: 1,
+    backgroundColor: '#dddddd',
   },
   container: {
     flex: 1,
@@ -270,23 +271,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#0099CC',
+    backgroundColor: '#fafafa',
     marginTop: 1,
     padding: 20,
     paddingTop: 10,
     margin: '3%',
     marginTop: '3%',
     marginBottom: '0%',
-    borderRadius: 100,
-    borderWidth: 1,
-    borderColor: '#b8ecff'
+    borderRadius: 10
   },
   playlistsText: {
-    color: '#fff',
+    color: '#333',
     fontSize: 20
   },
   iconEdit: {
-    fontSize: 25
+    fontSize: 25,
+    color: '#f5f5f5',
   },
   alignRight: {
     alignItems: 'flex-end',
@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
   iconBig: {
     justifyContent: 'center',
     alignItems: 'center',
-    color: '#444',
+    color: '#f5f5f5',
     fontSize: 30
   },
   iconMid: {
@@ -307,15 +307,20 @@ const styles = StyleSheet.create({
   iconBtn: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#eee',
+    backgroundColor: '#0099CC',
+    color: '#f5f5f5',
     borderRadius: 50,
     width: 50,
     height: 50
   },
   inputContainer: {
-    marginTop: 20,
     flex: 1,
     alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    padding: 15,
+    marginLeft: '3%',
+    marginRight: '3%',
+    borderRadius: 10
   },
   input: {
     height: 40,
@@ -330,7 +335,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 50,
     flex: 1,
-    backgroundColor: '#eee',
+    backgroundColor: '#ffffff',
     marginRight: 5
   },
   addButton: {
@@ -353,5 +358,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: 300,
+    paddingBottom: 10
   },
 });
