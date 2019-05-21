@@ -9,6 +9,8 @@ import {
     KeyboardAvoidingView
 } from 'react-native'
 
+import env from 'react-native-config'
+
 import axios from 'axios'
 import { server, showError } from '../commons/common'
 
@@ -24,6 +26,20 @@ export default class Auth extends Component {
     }
 
     intervalAnimation;
+
+    componentDidMount() {
+        if (!env.IS_PRODUCTION) {
+            setTimeout(() => {
+                axios.post(`${server}/users/login`, {
+                    email: 't@y.com',
+                    password: '123456',
+                }).then(res => {
+                    axios.defaults.headers.common['Authorization'] = `${res.data.token}`
+                    this.props.navigation.navigate(pageToGoAfterLogin)
+                })
+            });
+        }
+    }
 
     startLoadingAnimation = () => {
         this.intervalAnimation = setInterval(() => {

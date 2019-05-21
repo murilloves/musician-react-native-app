@@ -7,18 +7,6 @@ import Gigs from './views/Gigs'
 import Playlists from './views/Playlists'
 import PlaylistInfo from './views/PlaylistInfo'
 
-// Navigation.registerComponent('nativeApp.Auth', () => Auth)
-// Navigation.registerComponent('nativeApp.HomePage', () => HomePage)
-// Navigation.registerComponent('nativeApp.Playlists', () => Playlists)
-// Navigation.registerComponent('nativeApp.PlaylistInfo', () => PlaylistInfo)
-
-// Navigation.startSingleScreenApp({
-//     screen: {
-//         screen: 'nativeApp.Auth',
-//         title: 'Login'
-//     }
-// })
-
 const MainRoutes = {
     Auth: {
         name: 'Auth',

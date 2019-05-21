@@ -37,7 +37,7 @@ export default class Playlists extends Component {
 
   loadPlaylists = async () => {
     if (!axios.defaults.headers.common['Authorization']) {
-      axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjNTVjMzYxNjU2YWFjMzhmMDI3ZjlkNSIsIm5hbWUiOiJUZaaaXN0ZSIsImF2YXRhciI6Ii8vd3d3LmdyYXZhdGFyLmNvbS9hdmF0YXIvNzUzYmI4YzFiMzY3MTkyOTkwNzgzOWI2YTE1MmJmMjE_cz0yMDAmcj1wZyZkPW1tIiwiaWF0IjoxNTUxNDA3NzE5LCJleHAiOjE1NTE0MTEzMTl9._66UwvYQWnI5Y56jzI0H3TkM_ShAHmvDCIXvVZDuoZE'
+      this.props.navigation.navigate('Auth')
     }
     try {
       const res = await axios.get(`${server}/playlists/all`)
@@ -72,26 +72,28 @@ export default class Playlists extends Component {
           {
             this.state.creatingNew &&
             (
-              <KeyboardAvoidingView behavior='padding' style={styles.inputContainer}>
-                <TextInput
-                  style={styles.input}
-                  placeholder='Nome da playlist'
-                  placeholderTextColor='rgba(0,0,0,0.5)'
-                  value={this.state.newPlaylistName}
-                  onChangeText={title => this.setState({ ...this.state, newPlaylistName: title })}
-                />
-                <View style={styles.btnRow}>
-                  <TouchableOpacity style={styles.cancelButton} onPress={() => this.setState({ ...this.state, creatingNew: !this.state.creatingNew })}>
-                    <Text>Cancelar</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={this.createNewPlaylist}
-                    style={this.state.saving ? styles.disabledAddButton : styles.addButton}
-                    disabled={this.state.saving}>
-                    <Text>{this.state.saving ? 'Adicionando...' : 'Adicionar'}</Text>
-                  </TouchableOpacity>
-                </View>
-              </KeyboardAvoidingView>
+              <View style={styles.scrollView}>
+                <KeyboardAvoidingView behavior='padding' style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder='Nome da nova playlist'
+                    placeholderTextColor='rgba(0,0,0,0.5)'
+                    value={this.state.newPlaylistName}
+                    onChangeText={title => this.setState({ ...this.state, newPlaylistName: title })}
+                  />
+                  <View style={styles.btnRow}>
+                    <TouchableOpacity style={styles.cancelButton} onPress={() => this.setState({ ...this.state, creatingNew: !this.state.creatingNew })}>
+                      <Text style={styles.white}>Cancelar</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={this.createNewPlaylist}
+                      style={this.state.saving ? styles.disabledAddButton : styles.addButton}
+                      disabled={this.state.saving}>
+                      <Text style={styles.white}>{this.state.saving ? 'Adicionando...' : 'Adicionar'}</Text>
+                    </TouchableOpacity>
+                  </View>
+                </KeyboardAvoidingView>
+              </View>
             )
           }
           {
@@ -228,10 +230,10 @@ export class EditPlaylist extends Component {
             />
             <View style={styles.btnRow}>
               <TouchableOpacity style={styles.cancelButton} onPress={() => this.setState({ ...this.state, editingPlaylist: !this.state.editingPlaylist })}>
-                <Text>Cancelar</Text>
+                <Text style={styles.white}>Cancelar</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={this.editPlaylist} style={styles.addButton}>
-                <Text>Salvar</Text>
+                <Text style={styles.white}>Salvar</Text>
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
@@ -301,7 +303,7 @@ const styles = StyleSheet.create({
   iconMid: {
     justifyContent: 'center',
     alignItems: 'center',
-    color: '#555',
+    color: '#f5f5f5',
     fontSize: 25
   },
   iconBtn: {
@@ -335,7 +337,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 50,
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#aaaaaa',
     marginRight: 5
   },
   addButton: {
@@ -360,4 +362,7 @@ const styles = StyleSheet.create({
     width: 300,
     paddingBottom: 10
   },
+  white: {
+    color: '#ffffff'
+  }
 });

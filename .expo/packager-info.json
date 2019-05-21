@@ -1,9 +1,9 @@
 {
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 11860,
-  "expoServerNgrokUrl": "https://xe-wkf.murilloves.nativeapp.exp.direct",
-  "packagerNgrokUrl": "https://packager.xe-wkf.murilloves.nativeapp.exp.direct",
-  "ngrokPid": 8312,
+  "packagerPid": 13464,
+  "expoServerNgrokUrl": "https://xe-wkf.anonymous.nativeapp.exp.direct",
+  "packagerNgrokUrl": "https://packager.xe-wkf.anonymous.nativeapp.exp.direct",
+  "ngrokPid": 9488,
   "devToolsPort": 19002
 }
