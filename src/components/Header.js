@@ -66,12 +66,15 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
     },
     textHeader: {
+        flex: 4,
         padding: 15,
+        textAlign: 'center',
         color: primaryColor,
         paddingLeft: 20,
         fontSize: 20
     },
     iconHeader: {
+        flex: 1,
         padding: 15,
         paddingLeft: 20,
         color: primaryColor,

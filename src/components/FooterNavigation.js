@@ -12,7 +12,7 @@ export default class FooterNavigationComponent extends React.Component {
         const currentPage = this.props.currentPage;
         const navLink1 = this.props.navLink1 ? this.props.navLink1 : 'HomePage';
         const navLink2 = this.props.navLink2 ? this.props.navLink2 : 'Playlists';
-        const navLink3 = this.props.navLink3 ? this.props.navLink3 : 'Gigs';
+        const navLink3 = this.props.navLink3 ? this.props.navLink3 : 'Profile';
         return (
             navigate &&
             <View style={ styles.container }>
@@ -29,15 +29,21 @@ export default class FooterNavigationComponent extends React.Component {
                             name={ Platform.OS === 'ios'? 'ios-musical-note' : 'md-musical-note' }
                         />
                     </TouchableOpacity>
+                    <TouchableOpacity onPress={ () => navigate(navLink3) }>
+                        <Ionicons
+                            style={ navLink3 === currentPage ? styles.iconSelected : styles.icon }
+                            name={ 'md-person' }
+                        />
+                    </TouchableOpacity>
                 </View>
             </View>
         )
     }
 }
 
-const primaryColor = '#444'
+const primaryColor = '#777777'
 const secondaryColor = '#fafafa'
-const selectedColor = '#0099CC'
+const selectedColor = '#212121'
 
 const androidNotchHeight = 24
 

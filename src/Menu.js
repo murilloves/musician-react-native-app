@@ -6,6 +6,7 @@ import HomePage from './views/HomePage'
 import Gigs from './views/Gigs'
 import Playlists from './views/Playlists'
 import PlaylistInfo from './views/PlaylistInfo'
+import Profile from './views/Profile'
 
 const MainRoutes = {
     Auth: {
@@ -13,7 +14,7 @@ const MainRoutes = {
         screen: Auth
     },
     HomePage: {
-        name: 'Home Page',
+        name: 'Home',
         screen: HomePage,
         navigationOptions: { title: 'Página Inicial' }
     },
@@ -21,6 +22,11 @@ const MainRoutes = {
         name: 'Meus Shows e Eventos',
         screen: Gigs,
         navigationOptions: { title: 'Meus Eventos' }
+    },
+    Profile: {
+        name: 'Perfil',
+        screen: Profile,
+        navigationOptions: { title: 'Perfil' }
     },
     Playlists: {
         name: 'Minhas Playlists',
