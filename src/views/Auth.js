@@ -249,4 +249,4 @@ const styles = StyleSheet.create({
     }
 });
 
-const pageToGoAfterLogin = 'Playlists'
+const pageToGoAfterLogin = 'Profile'
