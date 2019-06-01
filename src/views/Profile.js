@@ -33,7 +33,7 @@ ProfileHeader = (props) => {
     <View style={[ styles.wrap ]}>
       <View style={[ styles.flex1, styles.marginImg ]}>
         <Image
-          source={{ uri: 'https://raw.githubusercontent.com/murilloves/murilloves.github.io/master/cv/images/profile-01.png' }}
+          source={{ uri: 'https://raw.githubusercontent.com/murilloves/murilloves.github.io/master/cv/images/profile-10.png' }}
           style={ styles.profileImg }
         />
       </View>
