@@ -10,7 +10,12 @@ import HeaderComponent from '../components/Header';
 export default class Profile extends React.Component {
   state = {
     pageName: 'Perfil Page',
-    person: 'Fulano de Tal'
+    person: 'Fulano de Tal',
+    url_1: 'https://raw.githubusercontent.com/murilloves/murilloves.github.io/master/cv/images/profile-12.png',
+    url_2: 'https://raw.githubusercontent.com/murilloves/murilloves.github.io/master/cv/images/profile-11.png',
+    url_3: 'https://raw.githubusercontent.com/murilloves/murilloves.github.io/master/cv/images/profile-10.png',
+    url_4: 'https://raw.githubusercontent.com/murilloves/murilloves.github.io/master/cv/images/profile-09.png',
+    url_5: 'https://raw.githubusercontent.com/murilloves/murilloves.github.io/master/cv/images/profile-08.png',
   }
 
   render() {
@@ -18,9 +23,11 @@ export default class Profile extends React.Component {
       <View style={styles.container}>
         <HeaderComponent title="Home" navigation={this.props.navigation} navTo='Playlists' />
         <ScrollView style={ styles.scrollView }>
-          <ProfileHeader name={this.state.person} />
-          <ProfileHeader name={this.state.person} />
-          <ProfileHeader name={this.state.person} />
+          <ProfileHeader name={this.state.person} imgUrl={this.state.url_1} />
+          <ProfileHeader name={this.state.person} imgUrl={this.state.url_2} />
+          <ProfileHeader name={this.state.person} imgUrl={this.state.url_3} />
+          <ProfileHeader name={this.state.person} imgUrl={this.state.url_4} />
+          <ProfileHeader name={this.state.person} imgUrl={this.state.url_5} />
         </ScrollView>
         <FooterNavigationComponent navigation={this.props.navigation} currentPage='Profile' />
       </View>
@@ -33,7 +40,7 @@ ProfileHeader = (props) => {
     <View style={[ styles.wrap ]}>
       <View style={[ styles.flex1, styles.marginImg ]}>
         <Image
-          source={{ uri: 'https://raw.githubusercontent.com/murilloves/murilloves.github.io/master/cv/images/profile-10.png' }}
+          source={{ uri: props.imgUrl }}
           style={ styles.profileImg }
         />
       </View>
