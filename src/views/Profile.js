@@ -10,26 +10,23 @@ import HeaderComponent from '../components/Header';
 export default class Profile extends React.Component {
   state = {
     pageName: 'Perfil Page',
-    person: 'Fulano de Tal',
+    name: 'Ariev Ollirum Avlis',
+    description: 'JavascriptDeveloper && \nProgrammingAddicted && \nGameDevEnthusiast && Musician && \nBeerLover && CoffeeDependant;',
+    skills: 'Piano, teclado, escaleta, violão, voz',
     url_1: 'https://raw.githubusercontent.com/murilloves/murilloves.github.io/master/cv/images/profile-12.png',
-    url_2: 'https://raw.githubusercontent.com/murilloves/murilloves.github.io/master/cv/images/profile-11.png',
-    url_3: 'https://raw.githubusercontent.com/murilloves/murilloves.github.io/master/cv/images/profile-10.png',
-    url_4: 'https://raw.githubusercontent.com/murilloves/murilloves.github.io/master/cv/images/profile-09.png',
-    url_5: 'https://raw.githubusercontent.com/murilloves/murilloves.github.io/master/cv/images/profile-08.png',
   }
 
   render() {
     return (
-      <View style={styles.container}>
-        <HeaderComponent title="Home" navigation={this.props.navigation} navTo='Playlists' />
+      <View style={ styles.container }>
+        <HeaderComponent title="Home" navigation={ this.props.navigation } navTo='Playlists' />
         <ScrollView style={ styles.scrollView }>
-          <ProfileHeader name={this.state.person} imgUrl={this.state.url_1} />
-          <ProfileHeader name={this.state.person} imgUrl={this.state.url_2} />
-          <ProfileHeader name={this.state.person} imgUrl={this.state.url_3} />
-          <ProfileHeader name={this.state.person} imgUrl={this.state.url_4} />
-          <ProfileHeader name={this.state.person} imgUrl={this.state.url_5} />
+          <ProfileHeader name={ this.state.name } imgUrl={ this.state.url_1 } />
+          <ProfileDescription description={ this.state.skills } />
+          <ProfileDivisor text='Skills' />
+          <ProfileDescription description={ this.state.description } />
         </ScrollView>
-        <FooterNavigationComponent navigation={this.props.navigation} currentPage='Profile' />
+        <FooterNavigationComponent navigation={ this.props.navigation } currentPage='Profile' />
       </View>
     );
   }
@@ -46,37 +43,43 @@ ProfileHeader = (props) => {
       </View>
       <View style={[ styles.flex7, styles.centerVertically ]}>
         <TouchableOpacity>
-          <Text style={styles.welcome}>{ props.name }</Text>
+          <Text style={ styles.welcome }>{ props.name }</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
 
+ProfileDescription = (props) => {
+  return (
+    <View style={[ styles.wrap, styles.flex1, styles.profilePadding ]}>
+      <Text style={ styles.profileDescription }>{ props.description }</Text>
+    </View>
+  );
+};
+
+ProfileDivisor = (props) => {
+  return (
+    <View style={[ styles.wrap, styles.flex1, styles.divisorPadding, styles.divisorBackground ]}>
+      <Text style={ styles.divisorText }>{ props.text }</Text>
+    </View>
+  )
+}
+
+
 const styles = StyleSheet.create({
-  flex1: {
-    flex: 1
-  },
-  flex2: {
-    flex: 2
-  },
-  flex3: {
-    flex: 3
-  },
-  flex4: {
-    flex: 4
-  },
-  flex5: {
-    flex: 5
-  },
-  flex6: {
-    flex: 6
-  },
-  flex7: {
-    flex: 7
-  },
-  flex8: {
-    flex: 8
+  flex1: { flex: 1 },
+  flex2: { flex: 2 },
+  flex3: { flex: 3 },
+  flex4: { flex: 4 },
+  flex5: { flex: 5 },
+  flex6: { flex: 6 },
+  flex7: { flex: 7 },
+  flex8: { flex: 8 },
+  wrap: {
+    flexWrap: 'wrap',
+    flexDirection:'row',
+    marginTop: 15
   },
   container: {
     flex: 1,
@@ -96,21 +99,36 @@ const styles = StyleSheet.create({
   },
   welcome: {
     fontSize: 20,
-    marginLeft: 25,
+    marginLeft: 15,
     textAlign: 'left',
-    color: '#212121',
+    color: '#313141',
   },
   name: {
     borderBottomWidth: 10,
     borderColor: 'red'
   },
-  wrap: {
-    flexWrap: 'wrap',
-    flexDirection:'row',
-    justifyContent: 'space-around',
-    marginTop: 15
-  },
   centerVertically: {
     justifyContent: 'center'
+  },
+  profileDescription: {
+    color: '#777',
+    fontSize: 13
+  },
+  profilePadding: {
+    paddingLeft: 25,
+    paddingRight: 25
+  },
+  divisorBackground: {
+    backgroundColor: '#304ffe'
+  },
+  divisorPadding: {
+    padding: 25,
+    paddingTop: 10,
+    paddingBottom: 10
+  },
+  divisorText: {
+    color: '#ffffff',
+    justifyContent: 'center',
+    fontSize: 16
   }
 });
