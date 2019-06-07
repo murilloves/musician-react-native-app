@@ -22,9 +22,9 @@ export default class Profile extends React.Component {
         <HeaderComponent title="Home" navigation={ this.props.navigation } navTo='Playlists' />
         <ScrollView style={ styles.scrollView }>
           <ProfileHeader name={ this.state.name } imgUrl={ this.state.url_1 } />
-          <ProfileDescription description={ this.state.skills } />
-          <ProfileDivisor text='Skills' />
-          <ProfileDescription description={ this.state.description } />
+          <ProfileDescription description={ this.state.skills } color={ '#444444' } />
+          <ProfileDivisor text='Description' />
+          <ProfileDescription description={ this.state.description } color={ '#777777' } />
         </ScrollView>
         <FooterNavigationComponent navigation={ this.props.navigation } currentPage='Profile' />
       </View>
@@ -53,7 +53,7 @@ ProfileHeader = (props) => {
 ProfileDescription = (props) => {
   return (
     <View style={[ styles.wrap, styles.flex1, styles.profilePadding ]}>
-      <Text style={ styles.profileDescription }>{ props.description }</Text>
+      <Text style={[ styles.profileDescription, {'color': props.color} ]}>{ props.description }</Text>
     </View>
   );
 };
@@ -65,6 +65,8 @@ ProfileDivisor = (props) => {
     </View>
   )
 }
+
+Profile
 
 
 const styles = StyleSheet.create({
@@ -86,7 +88,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   scrollView: {
-    marginTop: 100,
+    marginTop: 75,
     marginBottom: 100,
   },
   profileImg: {

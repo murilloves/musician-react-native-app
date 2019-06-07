@@ -255,8 +255,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#00C851',
   },
   scrollView: {
-    marginTop: 80,
-    marginBottom: 60,
+    marginTop: 70,
+    marginBottom: 50,
     flex: 1,
   },
   placeholder: {
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   playlistsContainer: {
-    marginTop: 80,
+    marginTop: 70,
   },
   playlistsCard: {
     flexDirection: 'row',

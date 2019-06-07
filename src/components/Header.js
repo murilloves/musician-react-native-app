@@ -67,18 +67,18 @@ const styles = StyleSheet.create({
     },
     textHeader: {
         flex: 4,
-        padding: 15,
+        padding: 10,
         textAlign: 'center',
         color: primaryColor,
-        paddingLeft: 20,
-        fontSize: 20
+        fontSize: 18
     },
     iconHeader: {
         flex: 1,
-        padding: 15,
-        paddingLeft: 20,
+        padding: 10,
+        paddingLeft: 15,
+        paddingRight: 15,
         color: primaryColor,
-        fontSize: 30
+        fontSize: 25
     },
     wrap: {
         flexWrap: 'wrap',

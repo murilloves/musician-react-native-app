@@ -55,25 +55,20 @@ const styles = StyleSheet.create({
         right: 0,
         bottom: 0,
         borderTopColor: '#eee',
-        borderTopWidth: 1,
+        borderTopWidth: 2,
+        borderBottomWidth: 2,
         // top: androidNotchHeight,
     },
-    textHeader: {
-        padding: 15,
-        color: primaryColor,
-        fontSize: 20
-    },
     icon: {
-        padding: 15,
-        paddingLeft: 20,
-        paddingRight: 20,
+        padding: 10,
+        paddingLeft: 15,
+        paddingRight: 15,
         color: primaryColor,
-        fontSize: 30
+        fontSize: 25
     },
     iconSelected: {
-        padding: 15,
-        paddingLeft: 20,
-        paddingRight: 20,
+        paddingLeft: 15,
+        paddingRight: 15,
         color: selectedColor,
         fontSize: 30
     },

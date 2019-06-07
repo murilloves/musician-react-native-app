@@ -306,8 +306,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#1C2331'
   },
   container: {
-    marginTop: 85,
-    marginBottom: 60,
+    marginTop: 70,
+    marginBottom: 50,
     flex: 1,
   },
   playlistsCard: {
